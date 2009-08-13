@@ -1,0 +1,15 @@
+span.soh{
+display:block;
+overflow:hidden;
+text-indent: -1000em;
+text-decoration:none;
+color:transparent;
+}
+
+
+@media print {
+	span.soh {
+		text-indent:0;
+	}
+
+}
