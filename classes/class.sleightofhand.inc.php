@@ -152,7 +152,6 @@ class a561_sleightofhand {
 		$im2 = imagecreatetruecolor($imw+$p[1]+$p[3], $imh+$p[0]+$p[2]);
 	
 		// Make the background of the new image the same as the background of the old one.
-		ImageFill($im2, 0, 0, $bg);
 		ImageSaveAlpha($im2, true);
 		ImageAlphaBlending($im2, false); 
 	
