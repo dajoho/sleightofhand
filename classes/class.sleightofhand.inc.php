@@ -12,11 +12,18 @@ class a561_sleightofhand {
 		$font = $this->setting('font');
 		$fontpath = $this->setting('fontpath');
 		$size = $this->setting('size');
-		$color = $this->setting('color');		
+		$color = $this->setting('color');
+		$wrap = $this->setting('wordwrap');
+		
 		
 		// do some decoding, as it is possible that html will get passed
 		$text = $this->htmlspecialchars_decode($settings['text']);
 		$text = strip_tags($text);
+
+		if ($wrap>0) {
+			$text = wordwrap($text,$wrap,"\n");
+		}
+		
 
 		$this->setting('text',$text);
 		
