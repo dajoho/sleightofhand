@@ -13,6 +13,13 @@ a561(document).ready(function(){
 		rel = a561(this).attr('rel');
 		if (a561(this).parent().href!="") {
 			a561(this).css('cursor','hand');
+			
+			width = a561(this).css('width');
+			height = a561(this).css('height');
+			
+			a561(this).parent().css('width',width);
+			a561(this).parent().css('height',height);
+			a561(this).parent().css('display','block');
 		}
 		if (rel) {
 			rel = rel.split(",");
