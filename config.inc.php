@@ -1,4 +1,5 @@
 <?php
+// config
 $mypage = 'sleightofhand';
 
 $REX['ADDON']['rxid'][$mypage] = '561';
