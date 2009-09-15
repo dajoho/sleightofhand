@@ -50,9 +50,9 @@ class a561_sleightofhand {
 			$this->setting('cachefile',$cachefile);
 			
 			if (!file_exists($cachefile)) {
-				$this->generate();
+			//					$this->generate();
 			}
-			
+			$this->generate();
 		}
 	}
 	
@@ -78,7 +78,9 @@ class a561_sleightofhand {
         $bounds = array();
         $image = "";
         
-        // determine font height.
+        
+		###############################################################
+		## determine font height.
         $bounds = ImageTTFBBox($this->setting('size'), 0, $this->setting('fontpath').$this->setting('font'), "W");
 		$font_height = abs($bounds[7]-$bounds[1]);		
 		$bounds = ImageTTFBBox($this->setting('size'), 0, $this->setting('fontpath').$this->setting('font'), $this->setting('text'));
@@ -87,8 +89,8 @@ class a561_sleightofhand {
 		$offset_y = $font_height;
 		$offset_x = 0;
 
-
-		// Deal with multiple lines
+		###############################################################
+		## Deal with multiple lines
 		$spacing = floatVal($this->setting('spacing'));
 		if ($spacing == 0 ) {
 			$spacing = 1.4;
@@ -100,22 +102,25 @@ class a561_sleightofhand {
 		{	$newY=$y+($i * $this->setting('size') * $spacing);			
 		}
 		$newHeight = $newY + $font_height;
-
-
-		$image = ImageCreateTrueColor($width+41,$newHeight+41);
 		
+		
+		
+		
+		###############################################################
+		## Create Alpha Channel
+		$image = ImageCreateTrueColor($width+41,$newHeight+41);
 		ImageSaveAlpha($image, true);
 		ImageAlphaBlending($image, false); 
-		
 		$bg = ImageColorAllocateAlpha($image, 220, 220, 220, 127);
+		$bg2 = $bg;
 		ImageFill($image, 0, 0, $bg);
-
 		$fg = $this->setting('color');
 		$foreground = ImageColorAllocateAlpha($image, $fg[0], $fg[1], $fg[2], 0);
 		
+		
 
-		// Render		
-
+		###############################################################
+		## Render all lines
 		$newY = 0;
 		for($i=0; $i< count($lines); $i++)
 		{	$newY=$y+($i * $this->setting('size') * $spacing);			
@@ -123,9 +128,18 @@ class a561_sleightofhand {
 		}
 		
 		
+		###############################################################
+        ## Rotation
+		$angle = $this->setting('rotateX');
+		if ($angle>0) {
+			$magic = new a561_magic;
+			$image = $magic->rotate($image,$angle);
+			$bg2 = imagecolorat($image, 5, 5);
+		}
+		
         
-        
-        // Crop
+   		###############################################################
+        ## Auto-Crop
 		$p = array_fill(0, 4, 0);
 		
 		// Get the image width and height.
@@ -141,7 +155,8 @@ class a561_sleightofhand {
 			$first = true;
 			for ($ix=0; $ix<$imw; $ix++){
 				$ndx = imagecolorat($image, $ix, $iy);
-				if ($ndx != $bg){
+
+				if ($ndx != $bg && $ndx !=$bg2){
 					if ($xmin > $ix){ $xmin = $ix; }
 					if ($xmax < $ix){ $xmax = $ix; }
 					if (!isset($ymin)){ $ymin = $iy; }
@@ -151,7 +166,6 @@ class a561_sleightofhand {
 			}
 		}
 
-		// The new width and height of the image. (not including padding)
 		$imw = 1+$xmax-$xmin; // Image width in pixels
 		$imh = 1+$ymax-$ymin; // Image height in pixels
 		
@@ -161,15 +175,15 @@ class a561_sleightofhand {
 		// Make the background of the new image the same as the background of the old one.
 		ImageSaveAlpha($im2, true);
 		ImageAlphaBlending($im2, false); 
-	
+		
 	    // Copy it over to the new image.
 	    imagecopy($im2, $image, $p[3], $p[0], $xmin, $ymin, $imw, $imh);
-	    
-	   	
-	    // To finish up, we replace the old image which is referenced.
 	    $image = $im2;
 		
 		
+		
+		###############################################################
+		## Cache the file
 		ImagePNG($image,$this->setting('cachefile'));
 	}
 
@@ -180,11 +194,6 @@ class a561_sleightofhand {
 		
 		if (file_exists($cachefile)) {
 			return $REX['HTDOCS_PATH'].'files/soh/'.basename($cachefile);
-			
-			/*$cachefile = basename($cachefile);
-			$cachefile = str_replace('soh-','',$cachefile);
-			$cachefile = str_replace('.png','',$cachefile);*/
-		//	return 'index.php?a561_soh='.$cachefile;
 		}
 	}
 	
@@ -249,6 +258,8 @@ class a561_sleightofhand {
 			return '<p class="soh-error"><strong>sleightofhand</strong>- Please check permissions on: '.$cachepath.'</p>';
 		}
 	}
+		
+		
 	
 	
 	function htmlspecialchars_decode($string,$style=ENT_COMPAT)
