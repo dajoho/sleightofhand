@@ -7,10 +7,11 @@ $REX['ADDON']['page'][$mypage] = $mypage;
 $REX['ADDON']['version'][$mypage] = "1.0";
 $REX['ADDON']['author'][$mypage] = "Dave Holloway";
 $REX['ADDON']['settings'][$mypage]['replacements'] = array();
-
+$REX['ADDON']['settings'][$mypage]['imagemagic']='';
 
 // classes, functions
 require_once $REX['INCLUDE_PATH']. '/addons/sleightofhand/classes/class.sleightofhand.inc.php';
+require_once $REX['INCLUDE_PATH']. '/addons/sleightofhand/classes/class.magic.inc.php';
 require_once $REX['INCLUDE_PATH']. '/addons/sleightofhand/functions/function.sleightofhand.inc.php';
 
 // extension points
