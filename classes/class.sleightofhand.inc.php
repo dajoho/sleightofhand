@@ -110,7 +110,7 @@ class a561_sleightofhand {
 		## Create Alpha Channel
 		$image = ImageCreateTrueColor($width+41,$newHeight+41);
 		ImageSaveAlpha($image, true);
-		ImageAlphaBlending($image, false); 
+		//ImageAlphaBlending($image, false); 
 		$bg = ImageColorAllocateAlpha($image, 220, 220, 220, 127);
 		$bg2 = $bg;
 		ImageFill($image, 0, 0, $bg);
