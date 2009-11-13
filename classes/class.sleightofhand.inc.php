@@ -50,9 +50,9 @@ class a561_sleightofhand {
 			$this->setting('cachefile',$cachefile);
 			
 			if (!file_exists($cachefile)) {
-			//					$this->generate();
+				$this->generate();
 			}
-			$this->generate();
+			//$this->generate();
 		}
 	}
 	
