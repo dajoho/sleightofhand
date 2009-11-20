@@ -24,30 +24,32 @@ function a561_addReplacement($selector='',$settings=array()) {
 }
 
 function a561_replace($selector='',$output='',$settings=array()) {
-	$doc = phpQuery::newDocument($output);
-	$reps = array();
-	$reps[0] = array($selector,$settings);
-	foreach ($reps as $rep) {
-		if (count($rep)==2) {				
-			$elems = pq($rep[0]);
-			foreach($elems as $elem) {
-				$text = pq($elem)->html();
-				$text = strip_tags($text);
-				$settings = $rep[1];
-				$settings['text']=$text;
-				$html = a561_sleightofhand($settings);
-				pq($elem)->html($html);
+	if (version_compare(PHP_VERSION, '5.0.0', '>')) {
+		$doc = phpQuery::newDocument($output);
+		$reps = array();
+		$reps[0] = array($selector,$settings);
+		foreach ($reps as $rep) {
+			if (count($rep)==2) {				
+				$elems = pq($rep[0]);
+				foreach($elems as $elem) {
+					$text = pq($elem)->html();
+					$text = strip_tags($text);
+					$settings = $rep[1];
+					$settings['text']=$text;
+					$html = a561_sleightofhand($settings);
+					pq($elem)->html($html);
+				}
+				
 			}
-			
 		}
+		$output = pq($doc)->markup();
+		
+		//remove empty tags
+		$output = preg_replace('/<(p|span|strong|b|em|h1|h2|h3|h4|h5|h6)>(\s|\b)*<\/\1>/','',$output);
+		$output = str_replace("\n",'',$output);
+		$output = str_replace("\r",'',$output);	
+		$output = str_replace("\t",'',$output);
 	}
-	$output = pq($doc)->markup();
-	
-	//remove empty tags
-	$output = preg_replace('/<(p|span|strong|b|em|h1|h2|h3|h4|h5|h6)>(\s|\b)*<\/\1>/','',$output);
-	$output = str_replace("\n",'',$output);
-	$output = str_replace("\r",'',$output);	
-	$output = str_replace("\t",'',$output);
 	return $output;
 }
 
