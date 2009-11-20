@@ -71,17 +71,24 @@ class a561_sleightofhand {
 	function generate() {
 		global $REX;
 		
+		// this isn't really needed, and should be commented out while testing
+		// it is only here for poorly configured servers
+		@ini_set('max_execution_time', 300); 
+		@ini_set('memory_limit','256M');
+		
+		
+		
 		$width = 0;
-        $height = 0;
-        $offset_x = 0;
-        $offset_y = 0;
-        $bounds = array();
-        $image = "";
-        
-        
+		$height = 0;
+		$offset_x = 0;
+		$offset_y = 0;
+		$bounds = array();
+		$image = "";
+		
+		
 		###############################################################
 		## determine font height.
-        $bounds = ImageTTFBBox($this->setting('size'), 0, $this->setting('fontpath').$this->setting('font'), "W");
+		$bounds = ImageTTFBBox($this->setting('size'), 0, $this->setting('fontpath').$this->setting('font'), "W");
 		$font_height = abs($bounds[7]-$bounds[1]);		
 		$bounds = ImageTTFBBox($this->setting('size'), 0, $this->setting('fontpath').$this->setting('font'), $this->setting('text'));
 		$width = abs($bounds[4]-$bounds[6]);
@@ -129,7 +136,7 @@ class a561_sleightofhand {
 		
 		
 		###############################################################
-        ## Rotation
+		## Rotation
 		$angle = $this->setting('rotateX');
 		if ($angle>0) {
 			$magic = new a561_magic;
@@ -137,9 +144,9 @@ class a561_sleightofhand {
 			$bg2 = imagecolorat($image, 5, 5);
 		}
 		
-        
-   		###############################################################
-        ## Auto-Crop
+		
+		###############################################################
+		## Auto-Crop
 		$p = array_fill(0, 4, 0);
 		
 		// Get the image width and height.
@@ -176,15 +183,16 @@ class a561_sleightofhand {
 		ImageSaveAlpha($im2, true);
 		ImageAlphaBlending($im2, false); 
 		
-	    // Copy it over to the new image.
-	    imagecopy($im2, $image, $p[3], $p[0], $xmin, $ymin, $imw, $imh);
-	    $image = $im2;
+		// Copy it over to the new image.
+		imagecopy($im2, $image, $p[3], $p[0], $xmin, $ymin, $imw, $imh);
+		$image = $im2;
 		
 		
 		
 		###############################################################
 		## Cache the file
 		ImagePNG($image,$this->setting('cachefile'));
+		
 	}
 
 	
@@ -262,11 +270,11 @@ class a561_sleightofhand {
 		
 	
 	
-	function htmlspecialchars_decode($string,$style=ENT_COMPAT)
-    {	$translation = array_flip(get_html_translation_table(HTML_SPECIALCHARS,$style));
+	function htmlspecialchars_decode($string,$style=ENT_COMPAT) {
+		$translation = array_flip(get_html_translation_table(HTML_SPECIALCHARS,$style));
 		if($style === ENT_QUOTES){ $translation['&#039;'] = '\''; }
 		return strtr($string,$translation);
-    }
+	}
 	
 	function setting($key=null,$value=null) {
 		
@@ -286,6 +294,5 @@ class a561_sleightofhand {
 		}
 	
 	}
-	
 }
 ?>
