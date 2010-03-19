@@ -312,6 +312,36 @@ a561_png.createVmlStyleSheet();
 
 a561(document).ready(function(){
 	if (document.attachEvent) {
+		
 		a561_png.fix('.soh');
+		
+		a561('.soh-mouseover').each(function(){
+			rel = a561(this).attr('rel');
+			if (rel) {
+				rel = rel.split(",");
+				
+				if (rel.length==2) {
+					for (i=0;i<rel.length;i++) {
+						tmp=new Image(100,100); 
+						tmp.src=rel[i];
+					}
+				
+					a561(this).mouseover(function(){
+						src = a561(this).attr('rel');
+						src = src.split(",");
+						a561(this).css('backgroundImage','url('+src[1]+')');
+					});
+					
+					a561(this).mouseout(function(){
+						src = a561(this).attr('rel');
+						src = src.split(",");
+						a561(this).css('backgroundImage','url('+src[0]+')');
+					});
+				}
+				
+			}
+		});
+	
+		
 	}	
 });

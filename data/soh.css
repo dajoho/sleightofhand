@@ -6,6 +6,9 @@ text-decoration:none;
 color:transparent;
 }
 
+span.soh-mouseover:hover{
+background-position:top right;
+}
 
 @media print {
 	span.soh {
