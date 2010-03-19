@@ -1,4 +1,6 @@
 <?php
+
+
 class a561_sleightofhand {
 	var $VALID=false;
 	
@@ -14,7 +16,13 @@ class a561_sleightofhand {
 		$size = $this->setting('size');
 		$color = $this->setting('color');
 		$wrap = $this->setting('wordwrap');
+		$quality = $this->setting('quality');
 		
+		$quality = intVal($quality);
+		if ($quality==0) {
+			$quality = 4;
+		}
+		$this->setting('quality',$quality);
 		
 		// do some decoding, as it is possible that html will get passed
 		$text = $this->htmlspecialchars_decode($settings['text']);
@@ -52,7 +60,8 @@ class a561_sleightofhand {
 			if (!file_exists($cachefile)) {
 				$this->generate();
 			}
-			//$this->generate();
+			//force compiling for development
+			$this->generate();
 		}
 	}
 	
@@ -86,36 +95,44 @@ class a561_sleightofhand {
 		$image = "";
 		
 		
+		$size_multiply = $this->setting('size')*$this->setting('quality');
+		$spacing_multiply = $this->setting('spacing')*$this->setting('quality');
+		
 		###############################################################
 		## determine font height.
-		$bounds = ImageTTFBBox($this->setting('size'), 0, $this->setting('fontpath').$this->setting('font'), "W");
-		$font_height = abs($bounds[7]-$bounds[1]);		
-		$bounds = ImageTTFBBox($this->setting('size'), 0, $this->setting('fontpath').$this->setting('font'), $this->setting('text'));
+		// andreas: http://www.redaxo.de/165-Moduldetails.html?module_id=188
+		$abc = 'šŠŸ…€†§ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz_0123456789;:<>/(){}%$¤"!';
+		$bounds = ImageTTFBBox($size_multiply, 0, $this->setting('fontpath').$this->setting('font'), $abc);
+		$size = $this->convertBoundingBox($bounds);
+		
+		$bounds = ImageTTFBBox($size_multiply, 0, $this->setting('fontpath').$this->setting('font'), $this->setting('text'));
+		
 		$width = abs($bounds[4]-$bounds[6]);
-		$height = abs($bounds[7]-$bounds[1]);
-		$offset_y = $font_height;
+		$height = $size['height'];
+		$offset_y = $size['yOffset']+$size['belowBasepoint'];
 		$offset_x = 0;
 
 		###############################################################
 		## Deal with multiple lines
-		$spacing = floatVal($this->setting('spacing'));
+		
+		$spacing = floatVal($spacing_multiply);
 		if ($spacing == 0 ) {
 			$spacing = 1.4;
 		}
-		$x = $offset_x+20;
-		$y = $offset_y+20;
+		$x = $offset_x;
+		$y = $offset_y;
 		$lines=explode("\n",$this->setting('text'));
-		for($i=0; $i< count($lines); $i++)
-		{	$newY=$y+($i * $this->setting('size') * $spacing);			
+		$newY = 0;
+		for($i=1; $i< count($lines); $i++)
+		{	$newY=$y+($i * $size_multiply * $spacing);			
 		}
-		$newHeight = $newY + $font_height;
-		
-		
+		$newHeight = $newY + $size['height']+$size['belowBasepoint'];
+	
 		
 		
 		###############################################################
 		## Create Alpha Channel
-		$image = ImageCreateTrueColor($width+41,$newHeight+41);
+		$image = ImageCreateTrueColor($width,$newHeight);
 		ImageSaveAlpha($image, true);
 		//ImageAlphaBlending($image, false); 
 		$bg = ImageColorAllocateAlpha($image, 220, 220, 220, 127);
@@ -130,8 +147,8 @@ class a561_sleightofhand {
 		## Render all lines
 		$newY = 0;
 		for($i=0; $i< count($lines); $i++)
-		{	$newY=$y+($i * $this->setting('size') * $spacing);			
-			ImageTTFText($image, $this->setting('size'), 0, $x, $newY, $foreground, $this->setting('fontpath').$this->setting('font'),  $lines[$i]);
+		{	$newY=$y+($i * $size_multiply * $spacing);			
+			ImageTTFText($image, $size_multiply, 0, $x, $newY, $foreground, $this->setting('fontpath').$this->setting('font'),  $lines[$i]);
 		}
 		
 		
@@ -158,6 +175,7 @@ class a561_sleightofhand {
 		$xmax = 0;
 
 		// Start scanning for the edges.
+		
 		for ($iy=0; $iy<$imh; $iy++){
 			$first = true;
 			for ($ix=0; $ix<$imw; $ix++){
@@ -166,32 +184,39 @@ class a561_sleightofhand {
 				if ($ndx != $bg && $ndx !=$bg2){
 					if ($xmin > $ix){ $xmin = $ix; }
 					if ($xmax < $ix){ $xmax = $ix; }
-					if (!isset($ymin)){ $ymin = $iy; }
-					$ymax = $iy;
 					if ($first){ $ix = $xmax; $first = false; }
 				}
 			}
 		}
 
 		$imw = 1+$xmax-$xmin; // Image width in pixels
-		$imh = 1+$ymax-$ymin; // Image height in pixels
 		
 		// Make another image to place the trimmed version in.
 		$im2 = imagecreatetruecolor($imw+$p[1]+$p[3], $imh+$p[0]+$p[2]);
-	
+		
+		
 		// Make the background of the new image the same as the background of the old one.
 		ImageSaveAlpha($im2, true);
 		ImageAlphaBlending($im2, false); 
 		
 		// Copy it over to the new image.
-		imagecopy($im2, $image, $p[3], $p[0], $xmin, $ymin, $imw, $imh);
+		imagecopy($im2, $image, $p[3], $p[0], $xmin, 0, $imw, $imh);
 		$image = $im2;
 		
+		
+		// Antialiasing (downsampling)
+		// robcs (http://forum.redaxo.de/sutra74521.html#74521)
+		$imgw_X = imagesx($image);
+		$imgh_X = imagesy($image);
+		$image_antialised = imagecreatetruecolor($imgw_X / $this->setting('quality'), $imgh_X / $this->setting('quality'));
+		ImageSaveAlpha($image_antialised, true);
+		ImageAlphaBlending($image_antialised, false);
+		imagecopyresampled($image_antialised, $image, 0,0,0,0, $imgw_X / $this->setting('quality'), $imgh_X / $this->setting('quality'), $imgw_X, $imgh_X);
 		
 		
 		###############################################################
 		## Cache the file
-		ImagePNG($image,$this->setting('cachefile'));
+		ImagePNG($image_antialised,$this->setting('cachefile'));
 		
 	}
 
@@ -267,7 +292,32 @@ class a561_sleightofhand {
 		}
 	}
 		
-		
+	function convertBoundingBox($bbox) {
+		if ($bbox[0] >= -1) {
+			$xOffset = -abs($bbox[0] + 1);
+		} else {
+			$xOffset = abs($bbox[0] + 2);
+		}
+		$width = abs($bbox[2] - $bbox[0]);
+		if ($bbox[0] < -1) {
+			$width = abs($bbox[2]) + abs($bbox[0]) - 1;
+		}
+		$yOffset = abs($bbox[5] + 1);
+		if ($bbox[5] >= -1) {
+			$yOffset = -$yOffset; // Fixed characters below the baseline.
+		}
+		$height = abs($bbox[7]) - abs($bbox[1]);
+		if ($bbox[3] > 0) {
+			$height = abs($bbox[7] - $bbox[1]) - 1;
+		}
+		return array(
+			'width' => $width,
+			'height' => $height,
+			'xOffset' => $xOffset, // Using xCoord + xOffset with imagettftext puts the left most pixel of the text at xCoord.
+			'yOffset' => $yOffset, // Using yCoord + yOffset with imagettftext puts the top most pixel of the text at yCoord.
+			'belowBasepoint' => max(0, $bbox[1])
+		);
+	}
 	
 	
 	function htmlspecialchars_decode($string,$style=ENT_COMPAT) {

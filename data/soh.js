@@ -7,11 +7,9 @@ eval(function(p,a,c,k,e,d){e=function(c){return(c<a?'':e(parseInt(c/a)))+((c=c%a
 var a561_sohCounter = 0;
 a561(document).ready(function(){
 	a561('.soh').each(function(i){
-		a561(this).attr('id','soh'+a561_sohCounter);
-		
 		
 		rel = a561(this).attr('rel');
-		if (a561(this).parent().href!="") {
+		if (a561(this).parent().attr('href')!=undefined) {
 			a561(this).css('cursor','hand');
 			
 			width = a561(this).css('width');
@@ -44,8 +42,6 @@ a561(document).ready(function(){
 			}
 			
 		}
-		
-		a561_sohCounter++;
 	});
 	
 	
