@@ -32,17 +32,19 @@ function a561_replace($selector='',$output='',$settings=array()) {
 			if (count($rep)==2) {				
 				$elems = pq($rep[0]);
 				foreach($elems as $elem) {
-					$text = pq($elem)->html();
+					$pq = pq($elem);
+					$text = $pq->html();
 					$text = strip_tags($text);
 					$settings = $rep[1];
 					$settings['text']=$text;
 					$html = a561_sleightofhand($settings);
-					pq($elem)->html($html);
+					$pq->html($html);
 				}
 				
 			}
 		}
-		$output = pq($doc)->markup();
+		$pq = pq($doc);
+		$output = $pq->markup();
 		
 		//remove empty tags
 		$output = preg_replace('/<(p|span|strong|b|em|h1|h2|h3|h4|h5|h6)>(\s|\b)*<\/\1>/','',$output);
