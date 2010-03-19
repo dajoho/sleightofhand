@@ -7,8 +7,6 @@ eval(function(p,a,c,k,e,d){e=function(c){return(c<a?'':e(parseInt(c/a)))+((c=c%a
 var a561_sohCounter = 0;
 a561(document).ready(function(){
 	a561('.soh').each(function(i){
-		
-		rel = a561(this).attr('rel');
 		if (a561(this).parent().attr('href')!=undefined) {
 			a561(this).css('cursor','hand');
 			
@@ -19,30 +17,5 @@ a561(document).ready(function(){
 			a561(this).parent().css('height',height);
 			a561(this).parent().css('display','block');
 		}
-		if (rel) {
-			rel = rel.split(",");
-			
-			if (rel.length==2) {
-				for (i=0;i<rel.length;i++) {
-					tmp=new Image(100,100); 
-					tmp.src=rel[i];
-				}
-			
-				a561(this).mouseover(function(){
-					src = a561(this).attr('rel');
-					src = src.split(",");
-					a561(this).css('backgroundImage','url('+src[1]+')');
-				});
-				
-				a561(this).mouseout(function(){
-					src = a561(this).attr('rel');
-					src = src.split(",");
-					a561(this).css('backgroundImage','url('+src[0]+')');
-				});
-			}
-			
-		}
 	});
-	
-	
 });

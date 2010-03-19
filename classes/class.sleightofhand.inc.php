@@ -61,7 +61,7 @@ class a561_sleightofhand {
 				$this->generate();
 			}
 			//force compiling for development
-			$this->generate();
+			#$this->generate();
 		}
 	}
 	
@@ -106,8 +106,9 @@ class a561_sleightofhand {
 		$size = $this->convertBoundingBox($bounds);
 		
 		$bounds = ImageTTFBBox($size_multiply, 0, $this->setting('fontpath').$this->setting('font'), $this->setting('text'));
+		$size2 = $this->convertBoundingBox($bounds);
 		
-		$width = abs($bounds[4]-$bounds[6]);
+		$width = $size2['width']+20; //this will be cropped
 		$height = $size['height'];
 		$offset_y = $size['yOffset']+$size['belowBasepoint'];
 		$offset_x = 0;
@@ -214,9 +215,36 @@ class a561_sleightofhand {
 		imagecopyresampled($image_antialised, $image, 0,0,0,0, $imgw_X / $this->setting('quality'), $imgh_X / $this->setting('quality'), $imgw_X, $imgh_X);
 		
 		
+		// Combine mouseover with main image
+		if ($this->setting('mouseover')!="") {
+				$tmp = $this->settings;
+				$tmp['color'] = $this->setting('mouseover');
+				unset($tmp['mouseover']);
+				$mouseover = a561_sleightofhand($tmp,true);
+				
+				$sw = imagesx($image_antialised);
+				$sh = imagesy($image_antialised);
+				
+				$newcanvas = imagecreatetruecolor(($sw*2),$sh);
+				ImageSaveAlpha($newcanvas, true);
+				ImageAlphaBlending($newcanvas, false);
+				$basepng =  $image_antialised;
+				$mouseoverpng =  imagecreatefrompng($mouseover);
+				
+				$this->setting('mouseoverpng',$mouseover);
+				
+				imagecopyresampled($newcanvas,$basepng, 0,  0,  0,  0, $sw , $sh, $sw , $sh);
+				imagecopyresampled($newcanvas,$mouseoverpng, $sw,  0,  0,  0, $sw , $sh, $sw , $sh);
+				
+				//overwrite the original base png with combined version
+				$image_antialised = $newcanvas;
+		}
+		
+		
 		###############################################################
 		## Cache the file
 		ImagePNG($image_antialised,$this->setting('cachefile'));
+		
 		
 	}
 
@@ -245,13 +273,19 @@ class a561_sleightofhand {
 			$code = '';
 			
 			
-			$code .= '<span class="soh"';
+			$classes = array();
+			$classes[] = 'soh';
 			
 			if ($this->setting('mouseover')!="") {
-				$tmp = $this->settings;
-				$tmp['color'] = $this->setting('mouseover');
-				$rel = $this->getImageLink().','.a561_sleightofhand($tmp,true);
-				
+				$this->setting('width',intVal($dims[0]/2));
+				$classes[] = 'soh-mouseover';
+			}
+			
+			$code .= '<span class="'.implode(' ',$classes).'"';	
+			
+			if ($this->setting('mouseoverpng')!="") {
+				$rel = $this->getImageLink().','.$this->setting('mouseoverpng');
+					
 				// if using html5 mode, the validator stupidly thinks "rel" is invalid
 				// here we remove the rel= for the validator.
 				// remember, html5 isn't final, so there is still a good chance rel will be reactivated
@@ -261,6 +295,7 @@ class a561_sleightofhand {
 					$code .= ' rel="'.$rel.'"';
 				}
 			}
+			
 			if ($REX['REDAXO']) {
 				$text = '';
 			} else {
