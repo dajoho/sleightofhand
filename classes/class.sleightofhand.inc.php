@@ -96,7 +96,7 @@ class a561_sleightofhand {
 		
 		
 		$size_multiply = $this->setting('size')*$this->setting('quality');
-		$spacing_multiply = $this->setting('spacing')*$this->setting('quality');
+		$spacing = $this->setting('spacing');
 		
 		###############################################################
 		## determine font height.
@@ -116,7 +116,7 @@ class a561_sleightofhand {
 		###############################################################
 		## Deal with multiple lines
 		
-		$spacing = floatVal($spacing_multiply);
+		$spacing = floatVal($spacing);
 		if ($spacing == 0 ) {
 			$spacing = 1.4;
 		}
