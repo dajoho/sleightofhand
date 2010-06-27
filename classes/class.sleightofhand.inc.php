@@ -65,7 +65,7 @@ class a561_sleightofhand {
 				$this->generate();
 			}
 			//force compiling for development
-			$this->generate();
+			#$this->generate();
 		}
 	}
 	
