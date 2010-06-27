@@ -28,6 +28,10 @@ class a561_sleightofhand {
 		$text = $this->htmlspecialchars_decode($settings['text']);
 		$text = strip_tags($text);
 
+		if ($this->islatin()) {
+			$text = utf8_decode($text);
+		}
+
 		if ($wrap>0) {
 			$text = wordwrap($text,$wrap,"\n");
 		}
@@ -61,7 +65,7 @@ class a561_sleightofhand {
 				$this->generate();
 			}
 			//force compiling for development
-			#$this->generate();
+			$this->generate();
 		}
 	}
 	
@@ -101,7 +105,7 @@ class a561_sleightofhand {
 		###############################################################
 		## determine font height.
 		// andreas: http://www.redaxo.de/165-Moduldetails.html?module_id=188
-		$abc = 'šŠŸ…€†§ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz_0123456789;:<>/(){}%$¤"!';
+		$abc = 'Ã¶Ã¤Ã¼Ã–Ã„ÃœÃŸABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz_0123456789;:<>/(){}%$Â§"!';
 		$bounds = ImageTTFBBox($size_multiply, 0, $this->setting('fontpath').$this->setting('font'), $abc);
 		$size = $this->convertBoundingBox($bounds);
 		
@@ -110,7 +114,7 @@ class a561_sleightofhand {
 		
 		$width = $size2['width']+20; //this will be cropped
 		$height = $size['height'];
-		$offset_y = $size['yOffset']+$size['belowBasepoint'];
+		$offset_y = $size['yOffset'];
 		$offset_x = 0;
 
 		###############################################################
@@ -127,8 +131,11 @@ class a561_sleightofhand {
 		for($i=1; $i< count($lines); $i++)
 		{	$newY=$y+($i * $size_multiply * $spacing);			
 		}
-		$newHeight = $newY + $size['height']+$size['belowBasepoint'];
-	
+		if (count($lines)==1) {
+			$newHeight = $newY + $size['height'];
+		} else {
+			$newHeight = $newY;
+		}
 		
 		
 		###############################################################
