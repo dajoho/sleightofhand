@@ -17,6 +17,7 @@ class a561_sleightofhand {
 		$color = $this->setting('color');
 		$wrap = $this->setting('wordwrap');
 		$quality = $this->setting('quality');
+		$align = $this->setting('text-align');
 		
 		$quality = intVal($quality);
 		if ($quality==0) {
@@ -154,8 +155,31 @@ class a561_sleightofhand {
 		###############################################################
 		## Render all lines
 		$newY = 0;
+		$align = $this->setting('text-align');
+		
 		for($i=0; $i< count($lines); $i++)
 		{	$newY=$y+($i * $size_multiply * $spacing);			
+			
+			$bounds = ImageTTFBBox($size_multiply, 0, $this->setting('fontpath').$this->setting('font'), $lines[$i]);
+			switch ($align) {
+				case "left":
+				case "l":
+				case "":
+					// do nothing
+				break;
+				
+				case "center":
+				case "centre":
+				case "c":
+					$x = ceil(($width - $bounds[2]) / 2); 
+				break;
+				
+				case "right":
+				case "r":
+					$x = ($width - $bounds[2]);
+				break;
+			}
+		
 			ImageTTFText($image, $size_multiply, 0, $x, $newY, $foreground, $this->setting('fontpath').$this->setting('font'),  $lines[$i]);
 		}
 		
