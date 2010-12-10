@@ -20,10 +20,10 @@ require_once $REX['INCLUDE_PATH']. '/addons/sleightofhand/extensions/extension.c
 
 // include phpquery + replacement EP, if using php5
 if (version_compare(PHP_VERSION, '5.0.0', '>')) {
-  if (!class_exists('phpQuery')) {
-    require_once $REX['INCLUDE_PATH']. '/addons/sleightofhand/classes/class.phpquery.inc.php';
-    require_once $REX['INCLUDE_PATH']. '/addons/sleightofhand/extensions/extension.replacements.inc.php';
-  }
+	if (!class_exists('phpQuery')) {
+	require_once $REX['INCLUDE_PATH']. '/addons/sleightofhand/classes/class.phpquery.inc.php';
+	require_once $REX['INCLUDE_PATH']. '/addons/sleightofhand/extensions/extension.replacements.inc.php';
+	}
 }
 
 
@@ -61,5 +61,4 @@ if (isset($_REQUEST['a561_js-ie'])) {
 	rex_send_file($jsfile, 'text/javascript');
 	exit();
 }
-
 ?>
