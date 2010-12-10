@@ -90,15 +90,12 @@ class a561_sleightofhand {
 		@ini_set('max_execution_time', 300); 
 		@ini_set('memory_limit','256M');
 		
-		
-		
 		$width = 0;
 		$height = 0;
 		$offset_x = 0;
 		$offset_y = 0;
 		$bounds = array();
 		$image = "";
-		
 		
 		$size_multiply = $this->setting('size')*$this->setting('quality');
 		$spacing = $this->setting('spacing');
@@ -129,12 +126,11 @@ class a561_sleightofhand {
 		$y = $offset_y;
 		$lines=explode("\n",$this->setting('text'));
 		$newY = 0;
-    
+
 		for($i=0; $i< count($lines); $i++) {
-		  $newY=$y+($i * $size_multiply * $spacing);			
+			$newY=$y+($i * $size_multiply * $spacing);
 		}
 		$newHeight = $newY+$size['belowBasepoint'];
-		
 		
 		###############################################################
 		## Create Alpha Channel
@@ -146,16 +142,14 @@ class a561_sleightofhand {
 		ImageFill($image, 0, 0, $bg);
 		$fg = $this->convertHex($this->setting('color'));
 		$foreground = ImageColorAllocateAlpha($image, $fg[0], $fg[1], $fg[2], 0);
-		
-		
 
 		###############################################################
 		## Render all lines
 		$newY = 0;
 		$align = $this->setting('text-align');
 		
-		for($i=0; $i< count($lines); $i++)
-		{	$newY=$y+($i * $size_multiply * $spacing);			
+		for($i=0; $i< count($lines); $i++) {
+			$newY=$y+($i * $size_multiply * $spacing);
 			
 			$bounds = ImageTTFBBox($size_multiply, 0, $this->setting('fontpath').$this->setting('font'), $lines[$i]);
 			switch ($align) {
@@ -205,7 +199,7 @@ class a561_sleightofhand {
 
 		// Start scanning for the edges.
 		
-		for ($iy=0; $iy<$imh; $iy++){
+		for ($iy=0; $iy<$imh; $iy++) {
 			$first = true;
 			for ($ix=0; $ix<$imw; $ix++){
 				$ndx = imagecolorat($image, $ix, $iy);
@@ -241,8 +235,7 @@ class a561_sleightofhand {
 		ImageSaveAlpha($image_antialised, true);
 		ImageAlphaBlending($image_antialised, false);
 		imagecopyresampled($image_antialised, $image, 0,0,0,0, $imgw_X / $this->setting('quality'), $imgh_X / $this->setting('quality'), $imgw_X, $imgh_X);
-		
-		
+
 		// Combine mouseover with main image
 		if ($this->setting('mouseover')!="") {
 				$tmp = $this->settings;
@@ -276,20 +269,20 @@ class a561_sleightofhand {
 		
 	}
 
-  function convertHex($hex) {
-    if (is_array($hex)) {
-      return $hex;
-    }
-    $hex = str_replace('#','',$hex);
-    
-    if (strlen($hex)==6) {
-      return array(
-        hexdec(substr($hex, 0, 2)),
-        hexdec(substr($hex, 2, 2)),
-        hexdec(substr($hex, 4, 2))
-      );
-    }
-  }
+	function convertHex($hex) {
+		if (is_array($hex)) {
+			return $hex;
+		}
+		$hex = str_replace('#','',$hex);
+		
+		if (strlen($hex)==6) {
+			return array(
+				hexdec(substr($hex, 0, 2)),
+				hexdec(substr($hex, 2, 2)),
+				hexdec(substr($hex, 4, 2))
+			);
+		}
+	}
 	
 	function getImageLink() {
 		global $REX;
@@ -311,9 +304,7 @@ class a561_sleightofhand {
 			$this->setting('width',$dims[0]);
 			$this->setting('height',$dims[1]);
 
-			
 			$code = '';
-			
 			
 			$classes = array();
 			$classes[] = 'soh';
@@ -361,7 +352,6 @@ class a561_sleightofhand {
 				$code = $code.$this->setting('suffix');
 			}
 
-			
 		
 			return $code;
 		} else {
@@ -399,11 +389,11 @@ class a561_sleightofhand {
 	
 	function htmlspecialchars_decode($string,$style=ENT_COMPAT) {
 		$translation = array_flip(get_html_translation_table(HTML_SPECIALCHARS,$style));
-    if($style === ENT_QUOTES){ $translation['&#039;'] = '\''; }
-    $string = strtr($string,$translation);
-    $string = str_replace('&amp;','&',$string);
-    return $string;
-	}
+		if($style === ENT_QUOTES){ $translation['&#039;'] = '\''; }
+			$string = strtr($string,$translation);
+			$string = str_replace('&amp;','&',$string);
+			return $string;
+		}
 	
 	function setting($key=null,$value=null) {
 		
