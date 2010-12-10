@@ -40,7 +40,7 @@ class a561_sleightofhand {
 
 		$this->setting('text',$text);
 		
-		if (empty($font) || empty($size) || empty($color)) {
+		if (empty($font) || empty($size) || empty($color) || empty($text)) {
 			$this->VALID = false;
 			$this->ERROR = '[$font, $size or $color missing]';
 		}
@@ -113,7 +113,7 @@ class a561_sleightofhand {
 		$bounds = ImageTTFBBox($size_multiply, 0, $this->setting('fontpath').$this->setting('font'), $this->setting('text'));
 		$size2 = $this->convertBoundingBox($bounds);
 		
-		$width = $size2['width']+20; //this will be cropped
+		$width = $size2['width']+40; //this will be cropped
 		$height = $size['height'];
 		$offset_y = $size['yOffset'];
 		$offset_x = 0;
@@ -129,14 +129,11 @@ class a561_sleightofhand {
 		$y = $offset_y;
 		$lines=explode("\n",$this->setting('text'));
 		$newY = 0;
-		for($i=1; $i< count($lines); $i++)
-		{	$newY=$y+($i * $size_multiply * $spacing);			
+    
+		for($i=0; $i< count($lines); $i++) {
+		  $newY=$y+($i * $size_multiply * $spacing);			
 		}
-		if (count($lines)==1) {
-			$newHeight = $newY + $size['height'];
-		} else {
-			$newHeight = $newY;
-		}
+		$newHeight = $newY+$size['belowBasepoint'];
 		
 		
 		###############################################################
@@ -147,7 +144,7 @@ class a561_sleightofhand {
 		$bg = ImageColorAllocateAlpha($image, 220, 220, 220, 127);
 		$bg2 = $bg;
 		ImageFill($image, 0, 0, $bg);
-		$fg = $this->setting('color');
+		$fg = $this->convertHex($this->setting('color'));
 		$foreground = ImageColorAllocateAlpha($image, $fg[0], $fg[1], $fg[2], 0);
 		
 		
@@ -279,6 +276,20 @@ class a561_sleightofhand {
 		
 	}
 
+  function convertHex($hex) {
+    if (is_array($hex)) {
+      return $hex;
+    }
+    $hex = str_replace('#','',$hex);
+    
+    if (strlen($hex)==6) {
+      return array(
+        hexdec(substr($hex, 0, 2)),
+        hexdec(substr($hex, 2, 2)),
+        hexdec(substr($hex, 4, 2))
+      );
+    }
+  }
 	
 	function getImageLink() {
 		global $REX;
@@ -388,8 +399,10 @@ class a561_sleightofhand {
 	
 	function htmlspecialchars_decode($string,$style=ENT_COMPAT) {
 		$translation = array_flip(get_html_translation_table(HTML_SPECIALCHARS,$style));
-		if($style === ENT_QUOTES){ $translation['&#039;'] = '\''; }
-		return strtr($string,$translation);
+    if($style === ENT_QUOTES){ $translation['&#039;'] = '\''; }
+    $string = strtr($string,$translation);
+    $string = str_replace('&amp;','&',$string);
+    return $string;
 	}
 	
 	function setting($key=null,$value=null) {
