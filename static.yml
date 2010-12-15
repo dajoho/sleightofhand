@@ -1,0 +1,7 @@
+name: sleightofhand
+perm: 'sleightofhand[]'
+extperm:
+author: Dave Holloway
+supportpage: bit.ly/sleightofhand-site
+sally: ['0.3.2']
+version: 'r21'
