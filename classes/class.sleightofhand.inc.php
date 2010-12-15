@@ -7,8 +7,6 @@ class a561_sleightofhand {
 	function a561_sleightofhand($settings=array()) {
 		global $REX;
 		
-		error_reporting(E_ALL);
-		
 		$this->settings = $settings;
 		
 		$this->setting('fontpath',$REX['INCLUDE_PATH'].'/addons/sleightofhand/fonts/');
