@@ -7,6 +7,8 @@ class a561_sleightofhand {
 	function a561_sleightofhand($settings=array()) {
 		global $REX;
 		
+		error_reporting(E_ALL);
+		
 		$this->settings = $settings;
 		
 		$this->setting('fontpath',$REX['INCLUDE_PATH'].'/addons/sleightofhand/fonts/');
@@ -51,7 +53,7 @@ class a561_sleightofhand {
 			$this->VALID = true;
 			
 			$cachekey = md5(serialize($this->settings));
-			$cachepath = $REX['HTDOCS_PATH'].'files/soh/';
+			$cachepath = $this->filespath().'soh/';
 			
 			if (!file_exists($cachepath)) {
 				$result = @mkdir($cachepath);
@@ -79,6 +81,16 @@ class a561_sleightofhand {
 		} else {
 			return false;
 		}
+	}
+	
+	function filespath() {
+		global $REX;
+		if (!defined('IS_SALLY')) {
+			return $REX['HTDOCS_PATH'].'files/';
+		} else {
+			return $REX['HTDOCS_PATH'].'data/dyn/public/sleightofhand/';
+		}
+		
 	}
 	
 	
@@ -289,7 +301,7 @@ class a561_sleightofhand {
 		$cachefile = $this->setting('cachefile');
 		
 		if (file_exists($cachefile)) {
-			return $REX['HTDOCS_PATH'].'files/soh/'.basename($cachefile);
+			return $this->filespath().'soh/'.basename($cachefile);
 		}
 	}
 	
@@ -338,7 +350,7 @@ class a561_sleightofhand {
 				$text = htmlentities($this->setting('text'),ENT_QUOTES,'UTF-8');
 				}
 			}
-			$code .= ' style="width:'.$this->setting('width').'px;height:'.$this->setting('height').'px;background-image:url('.$REX['HTDOCS_PATH'].'files/soh/'.basename($cachefile).')">'.$text.'</span>';
+			$code .= ' style="width:'.$this->setting('width').'px;height:'.$this->setting('height').'px;background-image:url('.$this->filespath().'soh/'.basename($cachefile).')">'.$text.'</span>';
 			
 			if ($this->setting('link')!="") {
 				$code = '<a href="'.$this->setting('link').'">'.$code.'</a>';
