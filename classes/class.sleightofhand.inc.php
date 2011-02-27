@@ -256,7 +256,10 @@ class a561_sleightofhand {
 				$sw = imagesx($image_antialised);
 				$sh = imagesy($image_antialised);
 				
-				$newcanvas = imagecreatetruecolor(($sw*2),$sh);
+				$newcanvas = imagecreatetruecolor(($sw*2)+10,$sh);
+				$bg = ImageColorAllocateAlpha($image, 220, 220, 220, 127);
+				ImageFill($newcanvas, 0, 0, $bg);
+				
 				ImageSaveAlpha($newcanvas, true);
 				ImageAlphaBlending($newcanvas, false);
 				$basepng =  $image_antialised;
@@ -265,7 +268,7 @@ class a561_sleightofhand {
 				$this->setting('mouseoverpng',$mouseover);
 				
 				imagecopyresampled($newcanvas,$basepng, 0,  0,  0,  0, $sw , $sh, $sw , $sh);
-				imagecopyresampled($newcanvas,$mouseoverpng, $sw,  0,  0,  0, $sw , $sh, $sw , $sh);
+				imagecopyresampled($newcanvas,$mouseoverpng, $sw+10,  0,  0,  0, $sw , $sh, $sw , $sh);
 				
 				//overwrite the original base png with combined version
 				$image_antialised = $newcanvas;
@@ -320,7 +323,7 @@ class a561_sleightofhand {
 			$classes[] = 'soh';
 			
 			if ($this->setting('mouseover')!="") {
-				$this->setting('width',intVal($dims[0]/2));
+				$this->setting('width',intVal($dims[0]/2)-5); // 5 = padding/2
 				$classes[] = 'soh-mouseover';
 			}
 			
