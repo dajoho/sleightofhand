@@ -1,18 +1,17 @@
 span.soh{
-display:block;
-overflow:hidden;
-text-indent: -1000em;
-text-decoration:none;
-color:transparent;
+    display:block;
+    overflow:hidden;
+    text-indent: -1000em;
+    text-decoration:none;
+    color:transparent;
 }
 
 span.soh-mouseover:hover{
-background-position:top right;
+    background-position:top right;
 }
 
 @media print {
-	span.soh {
-		text-indent:0;
-	}
-
+    span.soh {
+        text-indent:0;
+    }
 }

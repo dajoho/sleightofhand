@@ -20,10 +20,10 @@ require_once $REX['INCLUDE_PATH']. '/addons/sleightofhand/extensions/extension.c
 
 // include phpquery + replacement EP, if using php5
 if (version_compare(PHP_VERSION, '5.0.0', '>')) {
-	if (!class_exists('phpQuery')) {
-	require_once $REX['INCLUDE_PATH']. '/addons/sleightofhand/classes/class.phpquery.inc.php';
-	require_once $REX['INCLUDE_PATH']. '/addons/sleightofhand/extensions/extension.replacements.inc.php';
-	}
+    if (!class_exists('phpQuery')) {
+    require_once $REX['INCLUDE_PATH']. '/addons/sleightofhand/classes/class.phpquery.inc.php';
+    require_once $REX['INCLUDE_PATH']. '/addons/sleightofhand/extensions/extension.replacements.inc.php';
+    }
 }
 
 
@@ -32,33 +32,33 @@ if (version_compare(PHP_VERSION, '5.0.0', '>')) {
 # retrieve an image if it is requested
 $soh = rex_request('a561_soh','string');
 if ($soh!="") {
-	$soh = str_replace('/','',$soh);
-	$soh = str_replace('.','',$soh);
-	$soh = str_replace("\\",'',$soh);
+    $soh = str_replace('/','',$soh);
+    $soh = str_replace('.','',$soh);
+    $soh = str_replace("\\",'',$soh);
 
-	$cachefile = $REX['INCLUDE_PATH'].'/generated/files/soh-'.$soh.'.png';
-	if (file_exists($cachefile)) {
-		header("Content-type: image/png");
-		$fp = fopen($cachefile, 'rb');
-		header("Content-Length: " . filesize($cachefile));
-		fpassthru($fp);
-	}
-	exit();
+    $cachefile = $REX['INCLUDE_PATH'].'/generated/files/soh-'.$soh.'.png';
+    if (file_exists($cachefile)) {
+        header("Content-type: image/png");
+        $fp = fopen($cachefile, 'rb');
+        header("Content-Length: " . filesize($cachefile));
+        fpassthru($fp);
+    }
+    exit();
 }
 # css, javascripts etc.
 if (isset($_REQUEST['a561_css'])) {
-	$cssfile = $REX['INCLUDE_PATH'] .'/addons/sleightofhand/data/soh.css';
-	rex_send_file($cssfile, 'text/css');
-	exit();
+    $cssfile = $REX['INCLUDE_PATH'] .'/addons/sleightofhand/data/soh.css';
+    rex_send_file($cssfile, 'text/css');
+    exit();
 }
 if (isset($_REQUEST['a561_js'])) {
-	$jsfile = $REX['INCLUDE_PATH'] .'/addons/sleightofhand/data/soh.js';
-	rex_send_file($jsfile, 'text/javascript');
-	exit();
+    $jsfile = $REX['INCLUDE_PATH'] .'/addons/sleightofhand/data/soh.js';
+    rex_send_file($jsfile, 'text/javascript');
+    exit();
 }
 if (isset($_REQUEST['a561_js-ie'])) {
-	$jsfile = $REX['INCLUDE_PATH'] .'/addons/sleightofhand/data/soh-ie.js';
-	rex_send_file($jsfile, 'text/javascript');
-	exit();
+    $jsfile = $REX['INCLUDE_PATH'] .'/addons/sleightofhand/data/soh-ie.js';
+    rex_send_file($jsfile, 'text/javascript');
+    exit();
 }
 ?>
