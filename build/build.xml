@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project name="sleightofhand" default="build" basedir=".">
+<project name="sleightofhand" default="build" basedir="../">
 	<property name="source" value="." />
 
 	<target name="prepstructure" description="Prepare the structure of the codebase">
