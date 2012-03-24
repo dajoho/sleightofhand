@@ -4,21 +4,23 @@
  *
  * PHP version 5
  *
- * @package Sleightofhand
- * @author  Dave Holloway <dh@dajoho.de>
- * @license GNU http://www.gnu.org/licenses/gpl-2.0.html
- * @version GIT: <git_id>
- * @link    http://bit.ly/sleightofhand-site
+ * @category Sleightofhand
+ * @package  Sleightofhand
+ * @author   Dave Holloway <dh@dajoho.de>
+ * @license  GNU http://www.gnu.org/licenses/gpl-2.0.html
+ * @version  GIT: <git_id>
+ * @link     http://bit.ly/sleightofhand-site
  */
 
 /**
  * A561_Magic - Manages communication with ImageMagick
  *
- * @package Sleightofhand
- * @author  Dave Holloway <dh@dajoho.de>
- * @license GNU http://www.gnu.org/licenses/gpl-2.0.html
- * @version Release: <package_version>
- * @link    http://bit.ly/sleightofhand-site
+ * @category Sleightofhand
+ * @package  Sleightofhand
+ * @author   Dave Holloway <dh@dajoho.de>
+ * @license  GNU http://www.gnu.org/licenses/gpl-2.0.html
+ * @version  Release: <package_version>
+ * @link     http://bit.ly/sleightofhand-site
  */
 class A561_Magic
 {
@@ -28,10 +30,10 @@ class A561_Magic
      *
      * @return void
      */
-    function a561_magic()
+    public function __construct()
     {
         global $REX;
-        $this->locateMagic();
+        $this->_locateMagic();
         $this->generated = $REX['INCLUDE_PATH'] . '/generated/files/';
     }
 
@@ -40,7 +42,7 @@ class A561_Magic
      *
      * @return void
      */
-    function locateMagic()
+    private function _locateMagic()
     {
         global $REX;
         $this->match = false;
@@ -68,7 +70,7 @@ class A561_Magic
      *
      * @return object True-colour image reference
      */
-    function rotate($image, $angle)
+    public function rotate($image, $angle)
     {
         if ($this->match) {
             $angle = intVal($angle);
