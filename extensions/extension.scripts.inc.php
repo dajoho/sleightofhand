@@ -1,5 +1,25 @@
 <?php
-function a561_scripts($params)
+/**
+ * Sleightofhand
+ *
+ * PHP version 5
+ *
+ * @package Sleightofhand
+ * @author  Dave Holloway <dh@dajoho.de>
+ * @license GNU http://www.gnu.org/licenses/gpl-2.0.html
+ * @version GIT: <git_id>
+ * @link    http://bit.ly/sleightofhand-site
+ */
+
+/**
+ * Loads necessary CSS/JS files into the correct
+ * area </head> of the output HTML code
+ *
+ * @param array $params REDAXO OUTPUT_FILTER Settings
+ *
+ * @return string Modified HTML Code
+ */
+function A561_scripts($params)
 {
     global $REX;
     $output = $params['subject'];

@@ -1,16 +1,46 @@
 <?php
-class a561_sleightofhand
-{
-    var $VALID = false;
+/**
+ * Sleightofhand
+ *
+ * PHP version 5
+ *
+ * @package Sleightofhand
+ * @author  Dave Holloway <dh@dajoho.de>
+ * @license GNU http://www.gnu.org/licenses/gpl-2.0.html
+ * @version GIT: <git_id>
+ * @link    http://bit.ly/sleightofhand-site
+ */
 
+/**
+ * A561_Sleightofhand - Main SOH Graphic Generation Class
+ *
+ * @package Sleightofhand
+ * @author  Dave Holloway <dh@dajoho.de>
+ * @license GNU http://www.gnu.org/licenses/gpl-2.0.html
+ * @version Release: <package_version>
+ * @link    http://bit.ly/sleightofhand-site
+ */
+class A561_Sleightofhand
+{
+    var $valid = false;
+
+    /**
+     * Main/Init SOH Function
+     * Checks settings, caching and generally
+     * gets things going.
+     *
+     * @param array $settings Array of Sleightofhand settings
+     */
     function a561_sleightofhand($settings = array())
     {
         global $REX;
 
         $this->settings = $settings;
 
-        $this->setting('fontpath',
-                        $REX['INCLUDE_PATH'] . '/addons/sleightofhand/fonts/');
+        $this->setting(
+            'fontpath',
+            $REX['INCLUDE_PATH'] . '/addons/sleightofhand/fonts/'
+        );
 
         $font = $this->setting('font');
         $fontpath = $this->setting('fontpath');
@@ -26,8 +56,10 @@ class a561_sleightofhand
         }
         $this->setting('quality', $quality);
 
-        // do some decoding, as it is possible that html will get passed
-        $text = $this->htmlspecialchars_decode($settings['text']);
+        /*
+         * Do some decoding, as it is possible that html will get passed
+         */
+        $text = $this->htmlspecialcharsDecode($settings['text']);
         $text = strip_tags($text);
 
         if ($this->islatin()) {
@@ -41,14 +73,15 @@ class a561_sleightofhand
         $this->setting('text', $text);
 
         if (empty($font) || empty($size) || empty($color) || empty($text)) {
-            $this->VALID = false;
-            $this->ERROR = '[$font, $size or $color missing]';
+            $this->valid = false;
+            $this->error = '[$font, $size or $color missing]';
         }
 
         if (!empty($font) && !empty($size) && !empty($color)
-                && file_exists($fontpath . $font)) {
+            && file_exists($fontpath . $font)
+        ) {
 
-            $this->VALID = true;
+            $this->valid = true;
 
             $cachekey = md5(serialize($this->settings));
             $cachepath = $this->filespath() . 'soh/';
@@ -65,11 +98,19 @@ class a561_sleightofhand
             if (!file_exists($cachefile)) {
                 $this->generate();
             }
-            //force compiling for development
-            #$this->generate();
+            /*
+             * Force compiling for development
+             */
+            //$this->generate();
         }
     }
 
+    /**
+     * Detects if the installed environment
+     * is UTF8 encoded, or Latin1/15 encoded
+     *
+     * @return boolean Latin/UTF8
+     */
     function islatin()
     {
         global $REX;
@@ -81,6 +122,11 @@ class a561_sleightofhand
         }
     }
 
+    /**
+     * Returns the path to a public storage folder
+     *
+     * @return string
+     */
     function filespath()
     {
         global $REX;
@@ -92,135 +138,164 @@ class a561_sleightofhand
 
     }
 
+    /**
+     * Generates the Sleightofhand graphics
+     *
+     * @return void
+     */
     function generate()
     {
         global $REX;
 
-        // this isn't really needed, and should be commented out while testing
-        // it is only here for poorly configured servers
+        /*
+         * This isn't really needed, and should be commented out while testing.
+         * It is only here for poorly configured servers.
+         */
         @ini_set('max_execution_time', 300);
         @ini_set('memory_limit', '256M');
 
         $width = 0;
         $height = 0;
-        $offset_x = 0;
-        $offset_y = 0;
+        $offsetX = 0;
+        $offsetY = 0;
         $bounds = array();
         $image = "";
 
-        $size_multiply = $this->setting('size') * $this->setting('quality');
+        $sizeMultiply = $this->setting('size') * $this->setting('quality');
         $spacing = $this->setting('spacing');
 
-        ###############################################################
-        ## determine font height.
-        // andreas: http://www.redaxo.de/165-Moduldetails.html?module_id=188
-        $abc = 'öäüÖÄÜßABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz_0123456789;:<>/(){}%$§"!';
-        $bounds = ImageTTFBBox($size_multiply, 0,
-                $this->setting('fontpath') . $this->setting('font'), $abc);
+        /*
+         * Determine font height.
+         * Andreas: http://www.redaxo.de/165-Moduldetails.html?module_id=188
+         */
+        $abc = 'öäüÖÄÜßABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghi'
+               .'jklmnopqrstuvwxyz_0123456789;:<>/(){}%$§"!';
+        $bounds = ImageTTFBBox(
+            $sizeMultiply, 0,
+            $this->setting('fontpath') . $this->setting('font'),
+            $abc
+        );
+
         $size = $this->convertBoundingBox($bounds);
 
-        $bounds = ImageTTFBBox($size_multiply, 0,
-                $this->setting('fontpath') . $this->setting('font'),
-                $this->setting('text'));
-        $size2 = $this->convertBoundingBox($bounds);
+        $bounds = ImageTTFBBox(
+            $sizeMultiply, 0,
+            $this->setting('fontpath') . $this->setting('font'),
+            $this->setting('text')
+        );
+        $sizeB = $this->convertBoundingBox($bounds);
 
-        $width = $size2['width'] + 40; //this will be cropped
+        $width = $sizeB['width'] + 40; // this will be cropped
         $height = $size['height'];
-        $offset_y = $size['yOffset'];
-        $offset_x = 0;
+        $offsetY = $size['yOffset'];
+        $offsetX = 0;
 
-        ###############################################################
-        ## Deal with multiple lines
-
+        /*
+         * Deal with multiple lines
+         */
         $spacing = floatVal($spacing);
         if ($spacing == 0) {
             $spacing = 1.4;
         }
-        $x = $offset_x;
-        $y = $offset_y;
+        $x = $offsetX;
+        $y = $offsetY;
         $lines = explode("\n", $this->setting('text'));
         $newY = 0;
 
         for ($i = 0; $i < count($lines); $i++) {
-            $newY = $y + ($i * $size_multiply * $spacing);
+            $newY = $y + ($i * $sizeMultiply * $spacing);
         }
         $newHeight = $newY + $size['belowBasepoint'];
 
-        ###############################################################
-        ## Create Alpha Channel
+        /*
+         *  Create Alpha Channel
+         */
         $image = ImageCreateTrueColor($width, $newHeight);
         ImageSaveAlpha($image, true);
-        //ImageAlphaBlending($image, false);
-        $bg = ImageColorAllocateAlpha($image, 220, 220, 220, 127);
-        $bg2 = $bg;
-        ImageFill($image, 0, 0, $bg);
+        // ImageAlphaBlending($image, false);
+        $bg = ImageColorAllocateAlpha(
+            $image, 220, 220, 220, 127
+        );
+        $bgB = $bg;
+        ImageFill(
+            $image, 0, 0, $bg
+        );
         $fg = $this->convertHex($this->setting('color'));
-        $foreground = ImageColorAllocateAlpha($image, $fg[0], $fg[1], $fg[2], 0);
+        $foreground = ImageColorAllocateAlpha(
+            $image, $fg[0], $fg[1], $fg[2], 0
+        );
 
-        ###############################################################
-        ## Render all lines
+        /*
+         * Render all lines
+         */
         $newY = 0;
         $align = $this->setting('text-align');
 
         for ($i = 0; $i < count($lines); $i++) {
-            $newY = $y + ($i * $size_multiply * $spacing);
+            $newY = $y + ($i * $sizeMultiply * $spacing);
 
-            $bounds = ImageTTFBBox($size_multiply, 0,
-                    $this->setting('fontpath') . $this->setting('font'),
-                    $lines[$i]);
+            $bounds = ImageTTFBBox(
+                $sizeMultiply, 0,
+                $this->setting('fontpath') . $this->setting('font'),
+                $lines[$i]
+            );
             switch ($align) {
-                case "left":
-                case "l":
-                case "":
-                // do nothing
-                    break;
+            case "left":
+            case "l":
+            case "":
+                /* do nothing */
+                break;
 
-                case "center":
-                case "centre":
-                case "c":
-                    $x = ceil(($width - $bounds[2]) / 2);
-                    break;
+            case "center":
+            case "centre":
+            case "c":
+                $x = ceil(($width - $bounds[2]) / 2);
+                break;
 
-                case "right":
-                case "r":
-                    $x = ($width - $bounds[2]);
+            case "right":
+            case "r":
+                $x = ($width - $bounds[2]);
                 break;
             }
 
-            ImageTTFText($image, $size_multiply, 0, $x, $newY, $foreground,
-                    $this->setting('fontpath') . $this->setting('font'),
-                    $lines[$i]);
+            ImageTTFText(
+                $image, $sizeMultiply, 0, $x, $newY, $foreground,
+                $this->setting('fontpath') . $this->setting('font'),
+                $lines[$i]
+            );
         }
 
-        ###############################################################
-        ## Rotation
+        /*
+         * Rotation
+         */
         $angle = $this->setting('rotateX');
         if ($angle > 0) {
             $magic = new a561_magic;
             $image = $magic->rotate($image, $angle);
-            $bg2 = imagecolorat($image, 5, 5);
+            $bgB = imagecolorat($image, 5, 5);
         }
 
-        ###############################################################
-        ## Auto-Crop
+        /*
+         * Auto-Crop
+         */
         $p = array_fill(0, 4, 0);
 
-        // Get the image width and height.
+        /* Get the image width and height. */
         $imw = imagesx($image);
         $imh = imagesy($image);
 
-        // Set the X variables.
+        /* Set the X variables. */
         $xmin = $imw;
         $xmax = 0;
 
-        // Start scanning for the edges.
+        /* Start scanning for the edges. */
 
         for ($iy = 0; $iy < $imh; $iy++) {
             $first = true;
             for ($ix = 0; $ix < $imw; $ix++) {
                 $ndx = imagecolorat($image, $ix, $iy);
 
-                if ($ndx != $bg && $ndx != $bg2) {
+                if ($ndx != $bg && $ndx != $bgB) {
                     if ($xmin > $ix) {
                         $xmin = $ix;
                     }
@@ -235,41 +310,49 @@ class a561_sleightofhand
             }
         }
 
-        $imw = 1 + $xmax - $xmin; // Image width in pixels
+        $imw = 1 + $xmax - $xmin; /* Image width in pixels */
 
-        // Make another image to place the trimmed version in.
-        $im2 = imagecreatetruecolor($imw + $p[1] + $p[3], $imh + $p[0] + $p[2]);
+        /* Make another image to place the trimmed version in. */
+        $imB = imagecreatetruecolor($imw + $p[1] + $p[3], $imh + $p[0] + $p[2]);
 
-        // Make the background of the new image the same as the background of the old one.
-        ImageSaveAlpha($im2, true);
-        ImageAlphaBlending($im2, false);
+        /*
+         * Make the background of the new image the same as
+         * the background of the old one.
+         */
+        ImageSaveAlpha($imB, true);
+        ImageAlphaBlending($imB, false);
 
-        // Copy it over to the new image.
-        imagecopy($im2, $image, $p[3], $p[0], $xmin, 0, $imw, $imh);
-        $image = $im2;
+        /* Copy it over to the new image. */
+        imagecopy($imB, $image, $p[3], $p[0], $xmin, 0, $imw, $imh);
+        $image = $imB;
 
-        // Antialiasing (downsampling)
-        // robcs (http://forum.redaxo.de/sutra74521.html#74521)
-        $imgw_X = imagesx($image);
-        $imgh_X = imagesy($image);
-        $image_antialised = imagecreatetruecolor(
-                $imgw_X / $this->setting('quality'),
-                $imgh_X / $this->setting('quality'));
-        ImageSaveAlpha($image_antialised, true);
-        ImageAlphaBlending($image_antialised, false);
-        imagecopyresampled($image_antialised, $image, 0, 0, 0, 0,
-                $imgw_X / $this->setting('quality'),
-                $imgh_X / $this->setting('quality'), $imgw_X, $imgh_X);
+        /*
+         * Antialiasing (downsampling)
+         * Robcs (http://forum.redaxo.de/sutra74521.html#74521)
+         */
+        $imgwX = imagesx($image);
+        $imghX = imagesy($image);
+        $imageAntialised = ImageCreateTrueColor(
+            $imgwX / $this->setting('quality'),
+            $imghX / $this->setting('quality')
+        );
+        ImageSaveAlpha($imageAntialised, true);
+        ImageAlphaBlending($imageAntialised, false);
+        ImageCopyResampled(
+            $imageAntialised, $image, 0, 0, 0, 0,
+            $imgwX / $this->setting('quality'),
+            $imghX / $this->setting('quality'), $imgwX, $imghX
+        );
 
-        // Combine mouseover with main image
+        /* Combine mouseover with main image */
         if ($this->setting('mouseover') != "") {
             $tmp = $this->settings;
             $tmp['color'] = $this->setting('mouseover');
             unset($tmp['mouseover']);
             $mouseover = a561_sleightofhand($tmp, true);
 
-            $sw = imagesx($image_antialised);
-            $sh = imagesy($image_antialised);
+            $sw = imagesx($imageAntialised);
+            $sh = imagesy($imageAntialised);
 
             $newcanvas = imagecreatetruecolor(($sw * 2) + 10, $sh);
             $bg = ImageColorAllocateAlpha($image, 220, 220, 220, 127);
@@ -277,26 +360,33 @@ class a561_sleightofhand
 
             ImageSaveAlpha($newcanvas, true);
             ImageAlphaBlending($newcanvas, false);
-            $basepng = $image_antialised;
+            $basepng = $imageAntialised;
             $mouseoverpng = imagecreatefrompng($mouseover);
 
             $this->setting('mouseoverpng', $mouseover);
 
-            imagecopyresampled($newcanvas, $basepng, 0, 0, 0, 0, $sw, $sh, $sw,
-                    $sh);
-            imagecopyresampled($newcanvas, $mouseoverpng, $sw + 10, 0, 0, 0,
-                    $sw, $sh, $sw, $sh);
+            imagecopyresampled(
+                $newcanvas, $basepng, 0, 0, 0, 0, $sw, $sh, $sw, $sh
+            );
+            imagecopyresampled(
+                $newcanvas, $mouseoverpng, $sw + 10, 0, 0, 0, $sw, $sh, $sw, $sh
+            );
 
-            //overwrite the original base png with combined version
-            $image_antialised = $newcanvas;
+            /* Overwrite the original base png with combined version */
+            $imageAntialised = $newcanvas;
         }
 
-        ###############################################################
-        ## Cache the file
-        ImagePNG($image_antialised, $this->setting('cachefile'));
-
+        /* Cache the file */
+        ImagePNG($imageAntialised, $this->setting('cachefile'));
     }
 
+    /**
+     * Converts HEX Codes into RGB
+     *
+     * @param string $hex String containing hex value
+     *
+     * @return array Array of RGB values
+     */
     function convertHex($hex)
     {
         if (is_array($hex)) {
@@ -305,11 +395,19 @@ class a561_sleightofhand
         $hex = str_replace('#', '', $hex);
 
         if (strlen($hex) == 6) {
-            return array(hexdec(substr($hex, 0, 2)),
-                    hexdec(substr($hex, 2, 2)), hexdec(substr($hex, 4, 2)));
+            return array(
+                hexdec(substr($hex, 0, 2)),
+                hexdec(substr($hex, 2, 2)),
+                hexdec(substr($hex, 4, 2))
+            );
         }
     }
 
+    /**
+     * Returns path to a generated Sleightofhand image
+     *
+     * @return string Path to image
+     */
     function getImageLink()
     {
         global $REX;
@@ -318,14 +416,20 @@ class a561_sleightofhand
         if (file_exists($cachefile)) {
             return $this->filespath() . 'soh/' . basename($cachefile);
         }
+        return '';
     }
 
+    /**
+     * Returns HTML code for embedding a Sleightofhand graphic
+     *
+     * @return string HTML Code
+     */
     function getCode()
     {
         global $REX;
         $cachefile = $this->setting('cachefile');
-        if (file_exists($cachefile)) {
 
+        if (file_exists($cachefile)) {
             $dims = getimagesize($cachefile);
 
             $this->setting('width', $dims[0]);
@@ -337,7 +441,10 @@ class a561_sleightofhand
             $classes[] = 'soh';
 
             if ($this->setting('mouseover') != "") {
-                $this->setting('width', intVal($dims[0] / 2) - 5); // 5 = padding/2
+                $this->setting(
+                    'width',
+                    intVal($dims[0] / 2) - 5  /* 5 = padding/2 */
+                );
                 $classes[] = 'soh-mouseover';
             }
 
@@ -347,10 +454,13 @@ class a561_sleightofhand
                 $rel = $this->getImageLink() . ','
                         . $this->setting('mouseoverpng');
 
-                // if using html5 mode, the validator stupidly thinks "rel" is invalid
-                // here we remove the rel= for the validator.
-                // remember, html5 isn't final, so there is still a good chance rel will be reactivated
-                // if you disagree with this, don't use sleightofhand
+                /*
+                 * If using html5 mode, the validator stupidly thinks "rel"
+                 * is invalid here we remove the rel= for the validator.
+                 * Remember; html5 isn't yet final, so there is still a good
+                 * chance rel will be reactivated.
+                 * If you disagree with this, don't use Sleightofhand
+                 */
                 $ua = substr($_SERVER['HTTP_USER_AGENT'], 0, 3);
                 if ($ua != "W3C") {
                     $code .= ' rel="' . $rel . '"';
@@ -363,8 +473,9 @@ class a561_sleightofhand
                 if ($this->islatin()) {
                     $text = htmlentities($this->setting('text'));
                 } else {
-                    $text = htmlentities($this->setting('text'), ENT_QUOTES,
-                            'UTF-8');
+                    $text = htmlentities(
+                        $this->setting('text'), ENT_QUOTES, 'UTF-8'
+                    );
                 }
             }
             $code .= ' style="width:' . $this->setting('width') . 'px;height:'
@@ -387,11 +498,19 @@ class a561_sleightofhand
 
             return $code;
         } else {
-            return '<p class="soh-error"><strong>sleightofhand</strong>- Please check permissions on: '
-                    . $cachepath . '</p>';
+            return '<p class="soh-error"><strong>sleightofhand</strong>-'.
+            'Please check permissions on: ' . $cachepath . '</p>';
         }
     }
 
+    /**
+     * Internal function to calculate box positioning.
+     * It is probably best not to touch this.
+     *
+     * @param array $bbox Array of box information
+     *
+     * @return array Processed array of box information
+     */
     function convertBoundingBox($bbox)
     {
         if ($bbox[0] >= -1) {
@@ -405,22 +524,31 @@ class a561_sleightofhand
         }
         $yOffset = abs($bbox[5] + 1);
         if ($bbox[5] >= -1) {
-            $yOffset = -$yOffset; // Fixed characters below the baseline.
+            $yOffset = -$yOffset; /* Fixed characters below the baseline. */
         }
         $height = abs($bbox[7]) - abs($bbox[1]);
         if ($bbox[3] > 0) {
             $height = abs($bbox[7] - $bbox[1]) - 1;
         }
         return array('width' => $width, 'height' => $height,
-                'xOffset' => $xOffset, // Using xCoord + xOffset with imagettftext puts the left most pixel of the text at xCoord.
-                'yOffset' => $yOffset, // Using yCoord + yOffset with imagettftext puts the top most pixel of the text at yCoord.
+                'xOffset' => $xOffset,
+                'yOffset' => $yOffset,
                 'belowBasepoint' => max(0, $bbox[1]));
     }
 
-    function htmlspecialchars_decode($string, $style = ENT_COMPAT)
+    /**
+     * Decodes any HTML-Entities back to normal characters
+     *
+     * @param string $string String containing entities
+     * @param string $style  Style of conversion
+     *
+     * @return string Converted string
+     */
+    function htmlspecialcharsDecode($string, $style = ENT_COMPAT)
     {
         $translation = array_flip(
-                get_html_translation_table(HTML_SPECIALCHARS, $style));
+            get_html_translation_table(HTML_SPECIALCHARS, $style)
+        );
         if ($style === ENT_QUOTES) {
             $translation['&#039;'] = '\'';
         }
@@ -429,23 +557,26 @@ class a561_sleightofhand
         return $string;
     }
 
+    /**
+     * Generic getter and setter for internal class settings
+     *
+     * @param string $key   Key
+     * @param string $value Value
+     */
     function setting($key = null, $value = null)
     {
-
-        //getter
         if ($key != null && $value == null) {
+            /* getter */
             if (isset($this->settings[$key])) {
                 return $this->settings[$key];
             } else {
                 return '';
             }
-        }
-        //setter
- else if ($key != null && $value != null) {
+        } else if ($key != null && $value != null) {
+            /* setter */
             $this->settings[$key] = $value;
             return true;
         }
 
     }
 }
-?>

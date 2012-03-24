@@ -1,5 +1,16 @@
 <?php
-// config
+/**
+ * Sleightofhand
+ *
+ * PHP version 5
+ *
+ * @package Sleightofhand
+ * @author  Dave Holloway <dh@dajoho.de>
+ * @license GNU http://www.gnu.org/licenses/gpl-2.0.html
+ * @version GIT: <git_id>
+ * @link    http://bit.ly/sleightofhand-site
+ */
+
 $mypage = 'sleightofhand';
 
 $REX['ADDON']['rxid'][$mypage] = '561';
@@ -26,16 +37,14 @@ require_once $REX['INCLUDE_PATH']
 // include phpquery + replacement EP, if using php5
 if (version_compare(PHP_VERSION, '5.0.0', '>')) {
     if (!class_exists('phpQuery')) {
-        require_once $REX['INCLUDE_PATH']
-                . '/addons/sleightofhand/classes/class.phpquery.inc.php';
-        require_once $REX['INCLUDE_PATH']
-                . '/addons/sleightofhand/extensions/extension.replacements.inc.php';
+        include_once $REX['INCLUDE_PATH']
+        . '/addons/sleightofhand/classes/class.phpquery.inc.php';
+        include_once $REX['INCLUDE_PATH']
+        . '/addons/sleightofhand/extensions/extension.replacements.inc.php';
     }
 }
 
-// ---------------------------------------------------------------------------
-// Special requests
-# retrieve an image if it is requested
+// retrieve an image if it is requested
 $soh = rex_request('a561_soh', 'string');
 if ($soh != "") {
     $soh = str_replace('/', '', $soh);
@@ -51,7 +60,7 @@ if ($soh != "") {
     }
     exit();
 }
-# css, javascripts etc.
+// css, javascripts etc.
 if (isset($_REQUEST['a561_css'])) {
     $cssfile = $REX['INCLUDE_PATH'] . '/addons/sleightofhand/data/soh.css';
     rex_send_file($cssfile, 'text/css');

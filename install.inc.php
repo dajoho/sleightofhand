@@ -1,12 +1,24 @@
 <?php
+/**
+ * Sleightofhand
+ *
+ * PHP version 5
+ *
+ * @package Sleightofhand
+ * @author  Dave Holloway <dh@dajoho.de>
+ * @license GNU http://www.gnu.org/licenses/gpl-2.0.html
+ * @version GIT: <git_id>
+ * @link    http://bit.ly/sleightofhand-site
+ */
+
 $install = true;
 
 if (!defined('IS_SALLY')) {
     $folder = 'files/soh/';
     if (!file_exists($REX['HTDOCS_PATH'] . $folder)) {
         if (!mkdir($REX['HTDOCS_PATH'] . $folder)) {
-            $REX['ADDON']['installmsg']['sleightofhand'] = 'Please check permissions on: '
-                    . $folder;
+            $REX['ADDON']['installmsg']['sleightofhand'] = 'Please check
+                    permissions on: ' . $folder;
             $install = false;
         }
     }
