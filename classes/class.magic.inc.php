@@ -1,6 +1,33 @@
 <?php
-class a561_magic
+/**
+ * Sleightofhand
+ *
+ * PHP version 5
+ *
+ * @package Sleightofhand
+ * @author  Dave Holloway <dh@dajoho.de>
+ * @license GNU http://www.gnu.org/licenses/gpl-2.0.html
+ * @version GIT: <git_id>
+ * @link    http://bit.ly/sleightofhand-site
+ */
+
+/**
+ * A561_Magic - Manages communication with ImageMagick
+ *
+ * @package Sleightofhand
+ * @author  Dave Holloway <dh@dajoho.de>
+ * @license GNU http://www.gnu.org/licenses/gpl-2.0.html
+ * @version Release: <package_version>
+ * @link    http://bit.ly/sleightofhand-site
+ */
+class A561_Magic
 {
+    /**
+     * Constructor. Calls functions to find ImageMagick
+     * and sets cache variable path
+     *
+     * @return void
+     */
     function a561_magic()
     {
         global $REX;
@@ -8,6 +35,11 @@ class a561_magic
         $this->generated = $REX['INCLUDE_PATH'] . '/generated/files/';
     }
 
+    /**
+     * Finds ImageMagick by trying out several common locations
+     *
+     * @return void
+     */
     function locateMagic()
     {
         global $REX;
@@ -28,6 +60,14 @@ class a561_magic
         }
     }
 
+    /**
+     * Uses ImageMagick to rotate an image to a give angle
+     *
+     * @param object $image True-colour image reference
+     * @param int    $angle Angle in degrees
+     *
+     * @return object True-colour image reference
+     */
     function rotate($image, $angle)
     {
         if ($this->match) {
@@ -37,8 +77,9 @@ class a561_magic
             ImagePNG($image, $srckey . '.png');
 
             exec(
-                    $this->convert . '  -background none -rotate ' . $angle
-                            . ' ' . $srckey . '.png png32:' . $dstkey . '.png');
+                $this->convert . '  -background none -rotate ' . $angle
+                . ' ' . $srckey . '.png png32:' . $dstkey . '.png'
+            );
             $image = imagecreatefrompng($dstkey . '.png');
             ImageSaveAlpha($image, true);
             ImageAlphaBlending($image, false);
