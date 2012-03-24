@@ -12,7 +12,7 @@
 
 	<target name="phpcs" description="Generate checkstyle.xml using PHP_CodeSniffer">
 		<exec executable="phpcs">
-			<arg line="--report=checkstyle --report-file=${basedir}/build/logs/checkstyle.xml --standard=build/phpcs.xml --ignore=./classes/phpQuery/*,./classes/class.phpquery.inc.php ${source}/" />
+			<arg line="--report=checkstyle --ignore=./classes/phpQuery/*,./classes/class.phpquery.inc.php --report-file=${basedir}/build/logs/checkstyle.xml --standard=build/phpcs.xml ${source}/" />
 		</exec>
 	</target>
 
