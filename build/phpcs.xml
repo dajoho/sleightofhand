@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<ruleset name="PHP_CodeSniffer">
+ <description>The coding standards for PHP_CodeSniffer.</description>
+
+ <!-- Include the PEAR standard with some exclusions -->
+ <rule ref="PEAR">
+    <!--<exclude name="Generic.WhiteSpace.DisallowTabIndent"/>--> 
+ </rule>
+</ruleset>

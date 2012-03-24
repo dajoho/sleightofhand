@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="sleightofhand" default="build" basedir=".">
+	<property name="source" value="." />
+
+	<target name="prepstructure" description="Prepare the structure of the codebase">
+		<delete dir="${basedir}/build/docs" />
+		<delete dir="${basedir}/build/logs" />
+		<mkdir dir="${basedir}/build/docs" />
+		<mkdir dir="${basedir}/build/logs" />
+	</target>
+
+	<target name="phpcs" description="Generate checkstyle.xml using PHP_CodeSniffer">
+		<exec executable="phpcs">
+			<arg line="--report=checkstyle --report-file=${basedir}/build/logs/checkstyle.xml --standard=build/phpcs.xml ${source}/" />
+		</exec>
+	</target>
+
+	<target name="phpdoc" description="Generate API documentation">
+		<exec executable="phpdoc">
+			<arg line="-d ${source} -t ${basedir}/build/docs" />
+		</exec>
+	</target>
+
+
+	<target name="build" depends="prepstructure,phpcs,phpdoc" />
+</project>
+
+
