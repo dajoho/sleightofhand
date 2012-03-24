@@ -18,7 +18,7 @@
 
 	<target name="phpdoc" description="Generate API documentation">
 		<exec executable="phpdoc">
-			<arg line="-d ${source} -t ${basedir}/build/docs  --ignore='${basedir}/classes/phpQuery/*,${basedir}/classes/class.phpquery.inc.php'" />
+			<arg line="-d ${source} -t ${basedir}/build/docs  --ignore='${basedir}/classes/phpQuery/*,${basedir}/classes/class.phpquery.inc.php' --title='Sleightofhand' " />
 		</exec>
 	</target>
 
