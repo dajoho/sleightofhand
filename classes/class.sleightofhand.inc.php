@@ -4,24 +4,32 @@
  *
  * PHP version 5
  *
- * @package Sleightofhand
- * @author  Dave Holloway <dh@dajoho.de>
- * @license GNU http://www.gnu.org/licenses/gpl-2.0.html
- * @version GIT: <git_id>
- * @link    http://bit.ly/sleightofhand-site
+ * @category Sleightofhand
+ * @package  Sleightofhand
+ * @author   Dave Holloway <dh@dajoho.de>
+ * @license  GNU http://www.gnu.org/licenses/gpl-2.0.html
+ * @version  GIT: <git_id>
+ * @link     http://bit.ly/sleightofhand-site
  */
 
 /**
  * A561_Sleightofhand - Main SOH Graphic Generation Class
  *
- * @package Sleightofhand
- * @author  Dave Holloway <dh@dajoho.de>
- * @license GNU http://www.gnu.org/licenses/gpl-2.0.html
- * @version Release: <package_version>
- * @link    http://bit.ly/sleightofhand-site
+ * @category Sleightofhand
+ * @package  Sleightofhand
+ * @author   Dave Holloway <dh@dajoho.de>
+ * @license  GNU http://www.gnu.org/licenses/gpl-2.0.html
+ * @version  Release: <package_version>
+ * @link     http://bit.ly/sleightofhand-site
  */
 class A561_Sleightofhand
 {
+    /**
+     * Boolean. True if a class instance is valid,
+     * false if not.
+     *
+     * @var unknown_type
+     */
     var $valid = false;
 
     /**
@@ -31,15 +39,15 @@ class A561_Sleightofhand
      *
      * @param array $settings Array of Sleightofhand settings
      */
-    function a561_sleightofhand($settings = array())
+    public function __construct($settings = array())
     {
-        global $REX;
+        $this->env = A561::make('Environment');
 
         $this->settings = $settings;
 
         $this->setting(
             'fontpath',
-            $REX['INCLUDE_PATH'] . '/addons/sleightofhand/fonts/'
+            $this->env->getModulePath() . 'fonts/'
         );
 
         $font = $this->setting('font');
@@ -59,10 +67,10 @@ class A561_Sleightofhand
         /*
          * Do some decoding, as it is possible that html will get passed
          */
-        $text = $this->htmlspecialcharsDecode($settings['text']);
+        $text = $this->htmlSpecialCharsDecode($settings['text']);
         $text = strip_tags($text);
 
-        if ($this->islatin()) {
+        if ($this->env->isLatin()) {
             $text = utf8_decode($text);
         }
 
@@ -84,7 +92,7 @@ class A561_Sleightofhand
             $this->valid = true;
 
             $cachekey = md5(serialize($this->settings));
-            $cachepath = $this->filespath() . 'soh/';
+            $cachepath = $this->env->getPublicPath();
 
             if (!file_exists($cachepath)) {
                 $result = @mkdir($cachepath);
@@ -106,47 +114,12 @@ class A561_Sleightofhand
     }
 
     /**
-     * Detects if the installed environment
-     * is UTF8 encoded, or Latin1/15 encoded
-     *
-     * @return boolean Latin/UTF8
-     */
-    function islatin()
-    {
-        global $REX;
-        $pos = strpos($REX['LANG'], '_utf8');
-        if ($pos === false) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * Returns the path to a public storage folder
-     *
-     * @return string
-     */
-    function filespath()
-    {
-        global $REX;
-        if (!defined('IS_SALLY')) {
-            return $REX['HTDOCS_PATH'] . 'files/';
-        } else {
-            return $REX['HTDOCS_PATH'] . 'data/dyn/public/sleightofhand/';
-        }
-
-    }
-
-    /**
      * Generates the Sleightofhand graphics
      *
      * @return void
      */
     function generate()
     {
-        global $REX;
-
         /*
          * This isn't really needed, and should be commented out while testing.
          * It is only here for poorly configured servers.
@@ -410,11 +383,9 @@ class A561_Sleightofhand
      */
     function getImageLink()
     {
-        global $REX;
         $cachefile = $this->setting('cachefile');
-
         if (file_exists($cachefile)) {
-            return $this->filespath() . 'soh/' . basename($cachefile);
+            return $this->env->getPublicPath() . basename($cachefile);
         }
         return '';
     }
@@ -426,7 +397,6 @@ class A561_Sleightofhand
      */
     function getCode()
     {
-        global $REX;
         $cachefile = $this->setting('cachefile');
 
         if (file_exists($cachefile)) {
@@ -467,10 +437,10 @@ class A561_Sleightofhand
                 }
             }
 
-            if ($REX['REDAXO']) {
+            if ($this->env->isBackend()) {
                 $text = '';
             } else {
-                if ($this->islatin()) {
+                if ($this->env->isLatin()) {
                     $text = htmlentities($this->setting('text'));
                 } else {
                     $text = htmlentities(
@@ -480,7 +450,7 @@ class A561_Sleightofhand
             }
             $code .= ' style="width:' . $this->setting('width') . 'px;height:'
                     . $this->setting('height') . 'px;background-image:url('
-                    . $this->filespath() . 'soh/' . basename($cachefile)
+                    . $this->env->getPublicPath() . basename($cachefile)
                     . ')">' . $text . '</span>';
 
             if ($this->setting('link') != "") {
@@ -544,7 +514,7 @@ class A561_Sleightofhand
      *
      * @return string Converted string
      */
-    function htmlspecialcharsDecode($string, $style = ENT_COMPAT)
+    function htmlSpecialCharsDecode($string, $style = ENT_COMPAT)
     {
         $translation = array_flip(
             get_html_translation_table(HTML_SPECIALCHARS, $style)
@@ -562,6 +532,8 @@ class A561_Sleightofhand
      *
      * @param string $key   Key
      * @param string $value Value
+     *
+     * @return mixed Key-Value or true
      */
     function setting($key = null, $value = null)
     {
