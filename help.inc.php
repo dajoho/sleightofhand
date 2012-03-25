@@ -7,7 +7,7 @@
  * @category Sleightofhand
  * @package  Sleightofhand
  * @author   Dave Holloway <dh@dajoho.de>
- * @license  GNU http://www.gnu.org/licenses/gpl-2.0.html
+ * @license  MIT License http://www.opensource.org/licenses/mit-license.html
  * @version  GIT: <git_id>
  * @link     http://bit.ly/sleightofhand-site
  */
