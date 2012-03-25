@@ -20,12 +20,11 @@
  *
  * @return string Unmodified EP Subject
  */
-function A561_clearcache($params)
+function A561_clearCache($params)
 {
-    global $REX;
-    foreach (glob($REX['HTDOCS_PATH'] . 'files/soh/*.png') as $file) {
+    foreach (glob(A561::env()->getPublicPath() . '*.png') as $file) {
         @unlink($file);
     }
     return $params['subject'];
 }
-rex_register_extension('ALL_GENERATED', 'a561_clearcache');
+A561::env()->extensionPoint('ALL_GENERATED', 'A561_clearCache');

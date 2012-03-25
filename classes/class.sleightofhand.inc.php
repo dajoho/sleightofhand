@@ -102,7 +102,6 @@ class A561_Sleightofhand
 
             $cachefile = $cachepath . 'soh-' . $cachekey . '.png';
             $this->setting('cachefile', $cachefile);
-
             if (!file_exists($cachefile)) {
                 $this->generate();
             }

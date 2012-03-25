@@ -25,6 +25,8 @@
 
 class A561
 {
+    static $env;
+
     /**
      * Static function to start the bootloader
      *
@@ -36,8 +38,10 @@ class A561
     {
         /* classes, functions */
         include_once $dir . 'classes/class.environment.inc.php';
-        include_once $dir . 'classes/class.environment.redaxo.inc.php';
+        include_once $dir . 'classes/class.environment.redaxo4.inc.php';
+        include_once $dir . 'classes/class.environment.redaxo5.inc.php';
         include_once $dir . 'classes/class.sleightofhand.inc.php';
+        include_once $dir . 'classes/class.replacements.inc.php';
         include_once $dir . 'classes/class.magic.inc.php';
         include_once $dir . 'functions/function.sleightofhand.inc.php';
 
@@ -98,7 +102,9 @@ class A561
     static public function getEnvironmentSuffix()
     {
         global $REX;
-        if (isset($REX)) {
+        if (class_exists('rex_extension')) {
+            return 'redaxo5';
+        } else if (isset($REX)) {
             return 'redaxo';
         } else if (!defined('IS_SALLY')) {
             return 'sally';
@@ -139,11 +145,25 @@ class A561
     }
 
     /**
-     * Sends a file to the browser with the given
-     * MIME-Type
+     * Returns an instance of the current environment object
      *
-     * @param $filename Filename to send
-     * @param $mimetype Mimetype to send
+     * @return Environment
+     */
+    static public function env()
+    {
+        if (!is_object(self::$env)) {
+            self::$env = self::make('Environment');
+        }
+        return self::$env;
+    }
+
+    /**
+     * Sends a file to the browser with the given MIME-Type
+     *
+     * @param string $filename Filename to send
+     * @param string $mimetype Mimetype to send
+     *
+     * @return void
      */
     static public function sendFile($filename='',$mimetype='text/plain')
     {

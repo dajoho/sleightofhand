@@ -1,0 +1,6 @@
+version: 'GIT: <git_id>'
+author: 'Dave Holloway <dh@dajoho.de>'
+supportpage: http://www.redaxo.org/de/forum/
+requires:
+  redaxo:
+    min-version: '5.0.alpha3'
