@@ -22,10 +22,9 @@
  */
 function A561_replacements($params)
 {
-    global $REX;
     $output = $params['subject'];
 
-    $reps = $REX['ADDON']['settings']['sleightofhand']['replacements'];
+    $reps = A561_Replacements::$replacements;
 
     if (count($reps) > 0) {
         $doc = phpQuery::newDocument($output);
@@ -54,4 +53,4 @@ function A561_replacements($params)
 
     return $output;
 }
-rex_register_extension('OUTPUT_FILTER', 'a561_replacements');
+A561::env()->extensionPoint('OUTPUT_FILTER', 'a561_replacements');

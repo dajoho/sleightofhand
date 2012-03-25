@@ -22,10 +22,9 @@
  */
 function A561_scripts($params)
 {
-    global $REX;
     $output = $params['subject'];
 
-    if (!$REX['REDAXO']) {
+    if (!A561::env()->isBackend()) {
         $d = '';
     } else {
         $d = '../';
@@ -42,4 +41,4 @@ function A561_scripts($params)
     $output = str_replace('</head>', $buf . '</head>', $output);
     return $output;
 }
-rex_register_extension('OUTPUT_FILTER', 'a561_scripts');
+A561::env()->extensionPoint('OUTPUT_FILTER', 'a561_scripts');

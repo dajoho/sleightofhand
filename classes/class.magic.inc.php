@@ -32,9 +32,8 @@ class A561_Magic
      */
     public function __construct()
     {
-        global $REX;
         $this->_locateMagic();
-        $this->generated = $REX['INCLUDE_PATH'] . '/generated/files/';
+        $this->generated = A561::env()->getCachePath();
     }
 
     /**
@@ -44,11 +43,9 @@ class A561_Magic
      */
     private function _locateMagic()
     {
-        global $REX;
         $this->match = false;
         $paths = array(
-                $REX['ADDON']['settings']['sleightofhand']['imagemagic']
-                . '/convert', 'convert', './convert',
+                'convert', './convert','/usr/local/bin/convert',
                 '/usr/bin/convert', '/opt/local/bin/convert',);
 
         foreach ($paths as $path) {

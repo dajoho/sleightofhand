@@ -42,17 +42,12 @@ function A561_sleightofhand($settings = array(),$fn=false)
  * @param string $selector CSS Selector
  * @param string $settings Array of Sleightofhand settings
  *
+ * @deprecated
  * @return void
  */
 function A561_addReplacement($selector='',$settings=array())
 {
-    global $REX;
-    if (version_compare(PHP_VERSION, '5.0.0', '>')) {
-        $REX['ADDON']['settings']['sleightofhand']['replacements'][] = array(
-            $selector,$settings);
-    } else {
-        //fail silently
-    }
+    A561_Replacements::addReplacement($selector = '', $settings = array());
 }
 
 /**

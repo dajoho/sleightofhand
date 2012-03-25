@@ -14,12 +14,13 @@
 
 $mypage = 'sleightofhand';
 
-$REX['ADDON']['rxid'][$mypage] = '561';
-$REX['ADDON']['page'][$mypage] = $mypage;
-$REX['ADDON']['version'][$mypage] = "1.0";
-$REX['ADDON']['author'][$mypage] = "Dave Holloway";
-$REX['ADDON']['settings'][$mypage]['replacements'] = array();
-$REX['ADDON']['settings'][$mypage]['imagemagic'] = '';
+if (class_exists('rex_extension')) {
+    $dir = $this->getBasePath();
+} else {
+    $REX['ADDON']['author'][$mypage] = "Dave Holloway";
+    $REX['ADDON']['settings'][$mypage]['replacements'] = array();
+    $REX['ADDON']['settings'][$mypage]['imagemagic'] = '';
+    $dir = $REX['INCLUDE_PATH'] . '/addons/sleightofhand/';
+}
 
-$dir = $REX['INCLUDE_PATH'] . '/addons/sleightofhand/';
 require_once $dir.'bootstrap.inc.php';

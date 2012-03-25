@@ -12,4 +12,12 @@
  * @link     http://bit.ly/sleightofhand-site
  */
 
-$REX['ADDON']['install']['sleightofhand'] = 0;
+/**
+ * Install Addon
+ * @todo Sally detection
+ */
+if (class_exists('rex_extension')) {
+    $this->setProperty('install', false);
+} else if (isset($REX)) {
+    $REX['ADDON']['install']['sleightofhand'] = 0;
+}
