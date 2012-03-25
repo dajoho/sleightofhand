@@ -7,24 +7,24 @@
  * @category Sleightofhand
  * @package  Sleightofhand
  * @author   Dave Holloway <dh@dajoho.de>
- * @license  GNU http://www.gnu.org/licenses/gpl-2.0.html
+ * @license  MIT License http://www.opensource.org/licenses/mit-license.html
  * @version  GIT: <git_id>
  * @link     http://bit.ly/sleightofhand-site
  */
 
 /**
  * A561_Environment_Redaxo - Contains information about the
- * current REDAXO installation.
+ * current REDAXO4 installation.
  *
  * @category Sleightofhand
  * @package  Sleightofhand
  * @author   Dave Holloway <dh@dajoho.de>
- * @license  GNU http://www.gnu.org/licenses/gpl-2.0.html
+ * @license  MIT License http://www.opensource.org/licenses/mit-license.html
  * @version  Release: <package_version>
  * @link     http://bit.ly/sleightofhand-site
  */
 
-class A561_Environment_Redaxo
+class A561_Environment_Redaxo extends A561_Environment
 {
     /**
      * Detects if the user is logged into the backend
@@ -100,4 +100,18 @@ class A561_Environment_Redaxo
     {
         return $this->getModulePath().'data/';
     }
+
+    /**
+     * Registers an extension point
+     *
+     * @param string $type     Extension Point type
+     * @param mixed  $callback Callback function/array
+     *
+     * @return void
+     */
+    public function extensionPoint($type, $callback)
+    {
+        rex_register_extension($type, $callback);
+    }
+
 }
