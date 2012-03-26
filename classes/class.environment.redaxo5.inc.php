@@ -24,7 +24,7 @@
  * @link     http://bit.ly/sleightofhand-site
  */
 
-class A561_Environment_Redaxo5 extends A561_Environment
+class A561_Environment_Redaxo5 implements A561_Environment
 {
     /**
      * Constructor. Saves an instance of the Sleightofhand rex_addon
@@ -88,6 +88,7 @@ class A561_Environment_Redaxo5 extends A561_Environment
     {
         $dir = rex_path::addonData('sleightofhand');
         rex_dir::create($dir);
+        echo $this->addon->getAssetsPath();
         return $this->addon->getAssetsPath();
     }
 

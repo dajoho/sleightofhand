@@ -22,7 +22,7 @@
  */
 function A561_sleightofhand($settings = array(),$fn=false)
 {
-    $obj = new a561_sleightofhand($settings);
+    $obj = new A561_Sleightofhand($settings);
 
     if ($obj->valid) {
         if (!$fn) {

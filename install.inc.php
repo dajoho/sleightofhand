@@ -14,7 +14,6 @@
 
 /**
  * @todo PHP4 Check
- * @todo Compare with old install.inc.php
  */
 
 /**
@@ -23,6 +22,9 @@
  */
 if (class_exists('rex_extension')) {
     $this->setProperty('install', true);
+} else if (defined('SLY_SALLYFOLDER')) {
+    $service = sly_Service_Factory::getService('AddOn');
+    $pubDir = $service->publicFolder('sleightofhand');
 } else if (isset($REX)) {
     $REX['ADDON']['install']['sleightofhand'] = 1;
 }
