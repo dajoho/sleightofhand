@@ -13,14 +13,15 @@
  */
 
 $mypage = 'sleightofhand';
-
+$dir = null;
 if (class_exists('rex_extension')) {
     $dir = $this->getBasePath();
-} else {
+} else if (defined('SLY_SALLYFOLDER')) {
+    $dir = SLY_SALLYFOLDER . '/addons/sleightofhand/';
+} else if (isset($REX)) {
     $REX['ADDON']['author'][$mypage] = "Dave Holloway";
-    $REX['ADDON']['settings'][$mypage]['replacements'] = array();
-    $REX['ADDON']['settings'][$mypage]['imagemagic'] = '';
     $dir = $REX['INCLUDE_PATH'] . '/addons/sleightofhand/';
 }
-
-require_once $dir.'bootstrap.inc.php';
+if ($dir !== null) {
+    include_once $dir.'bootstrap.inc.php';
+}

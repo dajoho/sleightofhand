@@ -44,6 +44,7 @@ class A561_Magic
     private function _locateMagic()
     {
         $this->match = false;
+        /** @todo user-defined location? */
         $paths = array(
                 'convert', './convert','/usr/local/bin/convert',
                 '/usr/bin/convert', '/opt/local/bin/convert',);

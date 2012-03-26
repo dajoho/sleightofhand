@@ -28,7 +28,8 @@ class A561
     static $env;
 
     /**
-     * Static function to start the bootloader
+     * Static function to start the bootloader, fails if
+     * environment can't be detected.
      *
      * @param string $dir Sleightofhand Module Folder
      *
@@ -36,10 +37,12 @@ class A561
      */
     static public function main($dir='')
     {
+
         /* classes, functions */
         include_once $dir . 'classes/class.environment.inc.php';
         include_once $dir . 'classes/class.environment.redaxo4.inc.php';
         include_once $dir . 'classes/class.environment.redaxo5.inc.php';
+        include_once $dir . 'classes/class.environment.sally.inc.php';
         include_once $dir . 'classes/class.sleightofhand.inc.php';
         include_once $dir . 'classes/class.replacements.inc.php';
         include_once $dir . 'classes/class.magic.inc.php';
@@ -57,10 +60,18 @@ class A561
             }
         }
 
+        /* check if environment can be detected, if not, return. */
+        try {
+            $env = self::env();
+        } catch (Exception $e) {
+            return;
+        }
+
+        /** @todo Tidy $env */
         $env = self::make('Environment');
 
         /* retrieve an image if it is requested */
-        $soh = rex_request('a561_soh', 'string');
+        $soh = (isset($_REQUEST['a561_soh'])) ? $_REQUEST['a561_soh'] : '';
         if ($soh != "") {
             $soh = str_replace('/', '', $soh);
             $soh = str_replace('.', '', $soh);
@@ -102,11 +113,12 @@ class A561
     static public function getEnvironmentSuffix()
     {
         global $REX;
+
         if (class_exists('rex_extension')) {
             return 'redaxo5';
         } else if (isset($REX)) {
-            return 'redaxo';
-        } else if (!defined('IS_SALLY')) {
+            return 'redaxo4';
+        } else if (defined('SLY_SALLYFOLDER')) {
             return 'sally';
         } else if (class_exists('oxSuperCfg')) {
             return 'oxid';

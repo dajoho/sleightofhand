@@ -24,7 +24,7 @@
  * @link     http://bit.ly/sleightofhand-site
  */
 
-class A561_Environment_Redaxo extends A561_Environment
+class A561_Environment_Redaxo4 implements A561_Environment
 {
     /**
      * Detects if the user is logged into the backend
