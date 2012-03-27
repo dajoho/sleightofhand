@@ -13,8 +13,8 @@
  */
 
 /**
- * A561_Environment_Redaxo5 - Contains information about the
- * current REDAXO5 installation.
+ * A561_Environment_Sally - Contains information about the
+ * current SallyCMS installation.
  *
  * @category Sleightofhand
  * @package  Sleightofhand
