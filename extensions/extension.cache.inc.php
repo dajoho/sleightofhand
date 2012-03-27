@@ -20,11 +20,13 @@
  *
  * @return string Unmodified EP Subject
  */
-function A561_clearCache($params)
+function A561_clearCache($output)
 {
+    $output = A561_Output_Filter::parse($output);
+
     foreach (glob(A561::env()->getPublicPath() . '*.png') as $file) {
         @unlink($file);
     }
-    return $params['subject'];
+    return $output;
 }
 A561::env()->extensionPoint('ALL_GENERATED', 'A561_clearCache');

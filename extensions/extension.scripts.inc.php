@@ -20,9 +20,10 @@
  *
  * @return string Modified HTML Code
  */
-function A561_scripts($params)
+
+function A561_scripts($output)
 {
-    $output = $params['subject'];
+    $output = A561_Output_Filter::parse($output);
 
     if (!A561::env()->isBackend()) {
         $d = '';
@@ -41,4 +42,4 @@ function A561_scripts($params)
     $output = str_replace('</head>', $buf . '</head>', $output);
     return $output;
 }
-A561::env()->extensionPoint('OUTPUT_FILTER', 'a561_scripts');
+A561::env()->extensionPoint('OUTPUT_FILTER', 'A561_scripts');
