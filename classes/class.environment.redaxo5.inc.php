@@ -88,7 +88,6 @@ class A561_Environment_Redaxo5 implements A561_Environment
     {
         $dir = rex_path::addonData('sleightofhand');
         rex_dir::create($dir);
-        echo $this->addon->getAssetsPath();
         return $this->addon->getAssetsPath();
     }
 

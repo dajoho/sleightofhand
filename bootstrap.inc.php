@@ -40,9 +40,11 @@ class A561
 
         /* classes, functions */
         include_once $dir . 'classes/class.environment.inc.php';
-        include_once $dir . 'classes/class.environment.redaxo4.inc.php';
         include_once $dir . 'classes/class.environment.redaxo5.inc.php';
+        include_once $dir . 'classes/class.environment.redaxo4.inc.php';
+        include_once $dir . 'classes/class.environment.redaxo3.inc.php';
         include_once $dir . 'classes/class.environment.sally.inc.php';
+        include_once $dir . 'classes/class.output.filter.inc.php';
         include_once $dir . 'classes/class.sleightofhand.inc.php';
         include_once $dir . 'classes/class.replacements.inc.php';
         include_once $dir . 'classes/class.magic.inc.php';
@@ -53,11 +55,9 @@ class A561
         include_once $dir . 'extensions/extension.cache.inc.php';
 
         /* include phpquery + replacement EP, if using php5 */
-        if (version_compare(PHP_VERSION, '5.0.0', '>')) {
-            if (!class_exists('phpQuery')) {
-                include_once $dir . 'classes/class.phpquery.inc.php';
-                include_once $dir . 'extensions/extension.replacements.inc.php';
-            }
+        if (!class_exists('phpQuery')) {
+            include_once $dir . 'classes/class.phpquery.inc.php';
+            include_once $dir . 'extensions/extension.replacements.inc.php';
         }
 
         /* check if environment can be detected, if not, return. */
@@ -116,8 +116,10 @@ class A561
 
         if (class_exists('rex_extension')) {
             return 'redaxo5';
-        } else if (isset($REX)) {
+        } else if (function_exists('rex_register_extension')) {
             return 'redaxo4';
+        } else if (isset($REX)) {
+            return 'redaxo3';
         } else if (defined('SLY_SALLYFOLDER')) {
             return 'sally';
         } else if (class_exists('oxSuperCfg')) {

@@ -20,9 +20,9 @@
  *
  * @return string Modified HTML Code
  */
-function A561_replacements($params)
+function A561_replacements($output)
 {
-    $output = $params['subject'];
+    $output = A561_Output_Filter::parse($output);
 
     $reps = A561_Replacements::$replacements;
 
