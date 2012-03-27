@@ -70,9 +70,12 @@ class A561_Sleightofhand
         $text = $this->htmlSpecialCharsDecode($settings['text']);
         $text = strip_tags($text);
 
-        if ($this->env->isLatin()) {
-            $text = utf8_decode($text);
-        }
+        /** @todo Is this needed? */
+        /*
+         * if ($this->env->isLatin()) {
+         *   $text = utf8_decode($text);
+         * }
+         */
 
         if ($wrap > 0) {
             $text = wordwrap($text, $wrap, "\n");

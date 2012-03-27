@@ -13,7 +13,7 @@
  */
 
 /**
- * A561_Environment_Redaxo - Contains information about the
+ * A561_Environment_Redaxo4 - Contains information about the
  * current REDAXO4 installation.
  *
  * @category Sleightofhand
