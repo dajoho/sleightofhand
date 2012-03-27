@@ -16,7 +16,7 @@
  * Replaces via REDAXO OUTPUT_FILTER any registered
  * CSS Element Replacements.
  *
- * @param array $params REDAXO OUTPUT_FILTER Settings
+ * @param array $output REDAXO OUTPUT_FILTER Settings
  *
  * @return string Modified HTML Code
  */

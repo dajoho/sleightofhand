@@ -16,7 +16,7 @@
  * Clears Sleightofhand Cache when the ALL_GENERATED
  * REDAXO Extension Point is called.
  *
- * @param array $params REDAXO ALL_GENERATED Settings
+ * @param array $output REDAXO ALL_GENERATED Settings
  *
  * @return string Unmodified EP Subject
  */

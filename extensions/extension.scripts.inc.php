@@ -16,7 +16,7 @@
  * Loads necessary CSS/JS files into the correct
  * area </head> of the output HTML code
  *
- * @param array $params REDAXO OUTPUT_FILTER Settings
+ * @param array $output REDAXO OUTPUT_FILTER Settings
  *
  * @return string Modified HTML Code
  */

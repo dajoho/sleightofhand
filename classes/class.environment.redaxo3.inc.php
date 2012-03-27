@@ -26,8 +26,6 @@
 
 class A561_Environment_Redaxo3 extends A561_Environment_Redaxo4
 {
-    private $outputFilterStarted = false;
-
     /**
      * Registers an extension point
      *
