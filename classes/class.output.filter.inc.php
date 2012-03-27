@@ -29,7 +29,7 @@ class A561_Output_Filter
     /**
      * Registers a new output filter
      *
-     * @param mixed  $callback Callback function/array
+     * @param mixed $callback Callback function/array
      *
      * @return void
      */
@@ -43,7 +43,9 @@ class A561_Output_Filter
      * Environment-sensitive helper function to
      * prepare content for the callbacks.
      *
-     * @param mixed $content REDAXO Array or string
+     * @param mixed $output REDAXO Array or string
+     *
+     * @return string Output filter subject (normally HTML)
      */
     static public function parse($output)
     {
