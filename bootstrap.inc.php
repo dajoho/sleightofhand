@@ -44,6 +44,7 @@ class A561
         include_once $dir . 'classes/class.environment.redaxo4.inc.php';
         include_once $dir . 'classes/class.environment.redaxo3.inc.php';
         include_once $dir . 'classes/class.environment.sally.inc.php';
+        include_once $dir . 'classes/class.environment.oxid.inc.php';
         include_once $dir . 'classes/class.output.filter.inc.php';
         include_once $dir . 'classes/class.sleightofhand.inc.php';
         include_once $dir . 'classes/class.replacements.inc.php';
@@ -70,22 +71,6 @@ class A561
         /** @todo Tidy $env */
         $env = self::make('Environment');
 
-        /* retrieve an image if it is requested */
-        $soh = (isset($_REQUEST['a561_soh'])) ? $_REQUEST['a561_soh'] : '';
-        if ($soh != "") {
-            $soh = str_replace('/', '', $soh);
-            $soh = str_replace('.', '', $soh);
-            $soh = str_replace("\\", '', $soh);
-
-            $cachefile = $env->getCacheFolder().'soh-' . $soh . '.png';
-            if (file_exists($cachefile)) {
-                header("Content-type: image/png");
-                $fp = fopen($cachefile, 'rb');
-                header("Content-Length: " . filesize($cachefile));
-                fpassthru($fp);
-            }
-            exit();
-        }
         /* css, javascripts etc. */
         if (isset($_REQUEST['a561_css'])) {
             $cssfile = $env->getAssetPath() . 'soh.css';

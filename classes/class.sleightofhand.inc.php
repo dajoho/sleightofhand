@@ -245,7 +245,7 @@ class A561_Sleightofhand
          */
         $angle = $this->setting('rotateX');
         if ($angle > 0) {
-            $magic = new a561_magic;
+            $magic = new A561_Magic;
             $image = $magic->rotate($image, $angle);
             $bgB = imagecolorat($image, 5, 5);
         }
