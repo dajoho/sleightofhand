@@ -23,7 +23,6 @@
 function A561_sleightofhand($settings = array(),$fn=false)
 {
     $obj = new A561_Sleightofhand($settings);
-
     if ($obj->valid) {
         if (!$fn) {
             return $obj->getCode();

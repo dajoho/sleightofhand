@@ -25,6 +25,7 @@ function A561_scripts($output)
 {
     $output = A561_Output_Filter::parse($output);
 
+    /** @todo Optimize this? Backend elsewhere? */
     if (!A561::env()->isBackend()) {
         $d = '';
     } else {
