@@ -12,12 +12,12 @@
  * @link     http://bit.ly/sleightofhand-site
  */
 
-$dir = $_SERVER['DOCUMENT_ROOT'] . '/'
-        . ltrim(dirname($_SERVER['SCRIPT_NAME']), '/')
-        . '/modules/sleightofhand/';
-
-require_once $dir . '/bootstrap.inc.php';
-
+if (!isAdmin()) {
+    $dir = $_SERVER['DOCUMENT_ROOT'] . '/'
+            . ltrim(dirname($_SERVER['SCRIPT_NAME']), '/')
+            . '/modules/sleightofhand/';
+    include_once $dir . '/bootstrap.inc.php';
+}
 /**
  * Sleightofhand_Oxoutput - Main SOH Graphic Generation Class
  *
