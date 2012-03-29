@@ -12,7 +12,6 @@
  * @link     http://bit.ly/sleightofhand-site
  */
 
-$mypage = 'sleightofhand';
 $dir = null;
 if (class_exists('rex_extension')) {
     $dir = $this->getBasePath();
