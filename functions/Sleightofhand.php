@@ -20,9 +20,9 @@
  *
  * @return string
  */
-function A561_sleightofhand($settings = array(),$fn=false)
+function Sleightofhand($settings=array(), $fn=false)
 {
-    $obj = new A561_Sleightofhand($settings);
+    $obj = new Sleightofhand_Generator($settings);
     if ($obj->valid) {
         if (!$fn) {
             return $obj->getCode();
@@ -35,6 +35,14 @@ function A561_sleightofhand($settings = array(),$fn=false)
 }
 
 /**
+ * @deprecated
+ * @todo compat
+ * */
+function A561_Sleightofhand($settings = array(),$fn=false) {
+    return Sleightofhand($settings,$fn);
+}
+
+/**
  * Queues a replacement of given CSS Selector.
  * Runs as an extension point on the whole HTML output.
  *
@@ -44,9 +52,18 @@ function A561_sleightofhand($settings = array(),$fn=false)
  * @deprecated
  * @return void
  */
+function Sleightofhand_addReplacement($selector='',$settings=array())
+{
+    Sleightofhand_Replacement::addReplacement($selector, $settings);
+}
+
+/**
+ * @todo compat
+ * @deprecated
+ */
 function A561_addReplacement($selector='',$settings=array())
 {
-    A561_Replacements::addReplacement($selector = '', $settings = array());
+    Sleightofhand_addReplacement($selector, $settings);
 }
 
 /**
@@ -59,7 +76,7 @@ function A561_addReplacement($selector='',$settings=array())
  *
  * @return string Modified HTML Code
  */
-function A561_replace($selector='',$output='',$settings=array())
+function Sleightofhand_replace($selector='',$output='',$settings=array())
 {
     if (version_compare(PHP_VERSION, '5.0.0', '>')) {
         $doc = phpQuery::newDocument($output);
@@ -74,7 +91,7 @@ function A561_replace($selector='',$output='',$settings=array())
                     $text = strip_tags($text);
                     $settings = $rep[1];
                     $settings['text']=$text;
-                    $html = a561_sleightofhand($settings);
+                    $html = Sleightofhand_sleightofhand($settings);
                     $pq->html($html);
                 }
 
@@ -93,4 +110,10 @@ function A561_replace($selector='',$output='',$settings=array())
         $output = str_replace("\t", '', $output);
     }
     return $output;
+}
+
+
+function A561_replace($selector='',$output='',$settings=array())
+{
+    return Sleightofhand_replace($selector, $output, $settings);
 }

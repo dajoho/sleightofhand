@@ -13,8 +13,8 @@
  */
 
 /**
- * A561_Environment_Redaxo4 - Contains information about the
- * current REDAXO4 installation.
+ * Sleightofhand_Environment - Abstract class, containing methods
+ * to retrieve information about the current environment.
  *
  * @category Sleightofhand
  * @package  Sleightofhand
@@ -24,82 +24,50 @@
  * @link     http://bit.ly/sleightofhand-site
  */
 
-class A561_Environment_Redaxo4 implements A561_Environment
+interface Sleightofhand_Environment_Abstract
 {
     /**
      * Detects if the user is logged into the backend
      *
      * @return boolean Backend/Frontend
      */
-    public function isBackend()
-    {
-        global $REX;
-        if ($REX['REDAXO']) {
-            return true;
-        } else {
-            return false;
-        }
-    }
+    public function isBackend();
 
     /**
-     * Detects if the environment is encoded with UTF8
-     * or Latin.
+     * Detects if the environment is encoded with UTF-8
+     * or Latin. Always false, because REDAXO5 uses unicode.
      *
      * @return boolean Latin/UTF8
      */
-    public function isLatin()
-    {
-        global $REX;
-        $pos = strpos($REX['LANG'], '_utf8');
-        if ($pos === false) {
-            return true;
-        } else {
-            return false;
-        }
-    }
+    public function isLatin();
 
     /**
      * Gets location of the module folder
      *
      * @return string Path to folder
      */
-    public function getModulePath()
-    {
-        global $REX;
-        return $REX['INCLUDE_PATH'] . '/addons/sleightofhand/';
-    }
+    public function getModulePath();
 
     /**
      * Gets location of the cache folder
      *
      * @return string Path to folder
      */
-    public function getCachePath()
-    {
-        global $REX;
-        return $REX['INCLUDE_PATH'] . '/generated/files/';
-    }
+    public function getCachePath();
 
     /**
      * Gets location of the public PNG-Cache folder
      *
      * @return string Path to folder
      */
-    public function getPublicPath()
-    {
-        global $REX;
-        return $REX['HTDOCS_PATH'] . 'files/soh/';
-    }
+    public function getPublicPath();
 
     /**
      * Gets location of the asset folder
      *
      * @return string Path to folder
      */
-    public function getAssetPath()
-    {
-        return $this->getModulePath().'data/';
-    }
+    public function getAssetPath();
 
     /**
      * Registers an extension point
@@ -109,9 +77,6 @@ class A561_Environment_Redaxo4 implements A561_Environment
      *
      * @return void
      */
-    public function extensionPoint($type, $callback)
-    {
-        rex_register_extension($type, $callback);
-    }
+    public function extensionPoint($type,$callback);
 
 }

@@ -13,8 +13,8 @@
  */
 
 /**
- * A561_Environment_Oxid - Contains information about the
- * current OXID installation.
+ * Sleightofhand_Environment_Sally - Contains information about the
+ * current SallyCMS installation.
  *
  * @category Sleightofhand
  * @package  Sleightofhand
@@ -23,47 +23,17 @@
  * @version  Release: <package_version>
  * @link     http://bit.ly/sleightofhand-site
  */
-class A561_Environment_Oxid implements A561_Environment
+
+class Sleightofhand_Environment_Sally implements Sleightofhand_Environment_Abstract
 {
     /**
-     * Starts consistency checks
+     * Constructor. Saves an instance of the Sleightofhand rex_addon
      *
      * @return void
      */
     public function __construct()
     {
-        $this->_oxidSymlinks();
-    }
-
-    /**
-     * Symlinks internal module files to their
-     * relevant folders within the OXID installation.
-     * If a symlink exists and is faulty, it gets
-     * repaired.
-     *
-     * @return void
-     */
-    private function _oxidSymlinks()
-    {
-        $links = array(
-            'functions/smarty.function.sleightofhand.php'
-            => 'core/smarty/plugins/function.sleightofhand.php'
-        );
-
-        $srcPath = dirname(dirname(__FILE__)) . '/';
-        $destPath = getCwd() . '/';
-
-        foreach ($links as $src=>$dest) {
-            $src = $srcPath . $src;
-            $dest = $destPath . $dest;
-            if (!is_link($dest) || linkinfo($dest)==0 || !file_exists($dest)) {
-                if (file_exists($dest)) {
-                    @unlink($dest);
-                }
-                @symlink($src, $dest);
-            }
-        }
-
+        $this->addon = sly_Service_Factory::getService('AddOn');
     }
 
     /**
@@ -73,12 +43,12 @@ class A561_Environment_Oxid implements A561_Environment
      */
     public function isBackend()
     {
-        return isAdmin();
+        return sly_Core::isBackend();
     }
 
     /**
-     * Detects if the environment is encoded with UTF8
-     * or Latin.
+     * Detects if the environment is encoded with UTF-8
+     * or Latin. Always false, because Sally uses unicode.
      *
      * @return boolean Latin/UTF8
      */
@@ -94,10 +64,7 @@ class A561_Environment_Oxid implements A561_Environment
      */
     public function getModulePath()
     {
-        $dir = $_SERVER['DOCUMENT_ROOT'] . '/'
-        . ltrim(dirname($_SERVER['SCRIPT_NAME']), '/')
-        . '/modules/sleightofhand/';
-        return $dir;
+        return $this->addon->baseFolder('sleightofhand') . '/';
     }
 
     /**
@@ -107,7 +74,8 @@ class A561_Environment_Oxid implements A561_Environment
      */
     public function getCachePath()
     {
-        return './tmp/';
+        $dir = $this->addon->internalFolder('sleightofhand') . '/';
+        return str_replace(SLY_DATAFOLDER, './data', $dir);
     }
 
     /**
@@ -117,7 +85,8 @@ class A561_Environment_Oxid implements A561_Environment
      */
     public function getPublicPath()
     {
-        return './out/sleightofhand/';
+        $dir = $this->addon->publicFolder('sleightofhand') . '/';
+        return str_replace(SLY_DATAFOLDER, './data', $dir);
     }
 
     /**
@@ -127,7 +96,7 @@ class A561_Environment_Oxid implements A561_Environment
      */
     public function getAssetPath()
     {
-        return $this->getModulePath().'data/';
+        return $this->getModulePath() . 'data/';
     }
 
     /**
@@ -138,11 +107,11 @@ class A561_Environment_Oxid implements A561_Environment
      *
      * @return void
      */
-    public function extensionPoint($type, $callback)
+    public function extensionPoint($type,$callback)
     {
-        if ($type == 'OUTPUT_FILTER') {
-            A561_Output_Filter::register($callback);
+        if ($type != 'ALL_GENERATED') {
+            $dispatcher = sly_Core::dispatcher();
+            $dispatcher->register('OUTPUT_FILTER', $callback);
         }
     }
-
 }

@@ -44,7 +44,7 @@ function Smarty_Function_sleightofhand($params, &$smarty)
             }
         }
         $settings['text'] = $text;
-        $text = A561_Sleightofhand($settings);
+        $text = Sleightofhand($settings);
     }
     return $text;
 }
