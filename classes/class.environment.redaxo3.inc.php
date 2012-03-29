@@ -39,6 +39,7 @@ class A561_Environment_Redaxo3 extends A561_Environment_Redaxo4
         if ($type == 'OUTPUT_FILTER') {
             A561_Output_Filter::register($callback);
         }
+        /** @todo: ALL_GENERATED detection? **/
     }
 
 }
