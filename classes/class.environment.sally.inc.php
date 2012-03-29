@@ -74,8 +74,8 @@ class A561_Environment_Sally implements A561_Environment
      */
     public function getCachePath()
     {
-        /** @todo remove? */
-        return '';
+        $dir = $this->addon->internalFolder('sleightofhand') . '/';
+        return str_replace(SLY_DATAFOLDER, './data', $dir);
     }
 
     /**
