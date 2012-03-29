@@ -20,11 +20,11 @@
  *
  * @return string Modified HTML Code
  */
-function A561_replacements($output)
+function Sleightofhand_replacement($output)
 {
-    $output = A561_Output_Filter::parse($output);
+    $output = Sleightofhand_Output_Filter::parse($output);
 
-    $reps = A561_Replacements::$replacements;
+    $reps = Sleightofhand_Replacement::$replacements;
 
     if (count($reps) > 0) {
         $doc = phpQuery::newDocument($output);
@@ -36,7 +36,7 @@ function A561_replacements($output)
                     $text = strip_tags($text);
                     $settings = $rep[1];
                     $settings['text'] = $text;
-                    $html = a561_sleightofhand($settings);
+                    $html = Sleightofhand_sleightofhand($settings);
                     pq($elem)->html($html);
                 }
 
@@ -53,4 +53,4 @@ function A561_replacements($output)
 
     return $output;
 }
-A561::env()->extensionPoint('OUTPUT_FILTER', 'a561_replacements');
+Sleightofhand::env()->extensionPoint('OUTPUT_FILTER', 'Sleightofhand_replacement');

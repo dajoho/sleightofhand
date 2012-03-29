@@ -13,8 +13,8 @@
  */
 
 /**
- * A561_Environment_Redaxo5 - Contains information about the
- * current REDAXO5 installation.
+ * Sleightofhand_Environment_Oxid - Contains information about the
+ * current OXID installation.
  *
  * @category Sleightofhand
  * @package  Sleightofhand
@@ -23,17 +23,47 @@
  * @version  Release: <package_version>
  * @link     http://bit.ly/sleightofhand-site
  */
-
-class A561_Environment_Redaxo5 implements A561_Environment
+class Sleightofhand_Environment_Oxid implements Sleightofhand_Environment_Abstract
 {
     /**
-     * Constructor. Saves an instance of the Sleightofhand rex_addon
+     * Starts consistency checks
      *
      * @return void
      */
     public function __construct()
     {
-        $this->addon = new rex_addon('sleightofhand');
+        $this->_oxidSymlinks();
+    }
+
+    /**
+     * Symlinks internal module files to their
+     * relevant folders within the OXID installation.
+     * If a symlink exists and is faulty, it gets
+     * repaired.
+     *
+     * @return void
+     */
+    private function _oxidSymlinks()
+    {
+        $links = array(
+            'functions/Smarty.php'
+            => 'core/smarty/plugins/function.sleightofhand.php'
+        );
+        /** @todo Improve this? What if the class gets moved? */
+        $srcPath = dirname(dirname(dirname(__FILE__))) . '/';
+        $destPath = getCwd() . '/';
+
+        foreach ($links as $src=>$dest) {
+            $src = $srcPath . $src;
+            $dest = $destPath . $dest;
+            if (!is_link($dest) || linkinfo($dest)==0 || !file_exists($dest)) {
+                if (file_exists($dest)) {
+                    @unlink($dest);
+                }
+                @symlink($src, $dest);
+            }
+        }
+
     }
 
     /**
@@ -43,12 +73,12 @@ class A561_Environment_Redaxo5 implements A561_Environment
      */
     public function isBackend()
     {
-        return rex::isBackend();
+        return isAdmin();
     }
 
     /**
-     * Detects if the environment is encoded with UTF-8
-     * or Latin. Always false, because REDAXO5 uses unicode.
+     * Detects if the environment is encoded with UTF8
+     * or Latin.
      *
      * @return boolean Latin/UTF8
      */
@@ -64,7 +94,10 @@ class A561_Environment_Redaxo5 implements A561_Environment
      */
     public function getModulePath()
     {
-        return rex_path::src() . 'addons/sleightofhand/';
+        $dir = $_SERVER['DOCUMENT_ROOT'] . '/'
+        . ltrim(dirname($_SERVER['SCRIPT_NAME']), '/')
+        . '/modules/sleightofhand/';
+        return $dir;
     }
 
     /**
@@ -74,9 +107,7 @@ class A561_Environment_Redaxo5 implements A561_Environment
      */
     public function getCachePath()
     {
-        $dir = rex_path::addonCache('sleightofhand');
-        rex_dir::create($dir);
-        return $dir;
+        return './tmp/';
     }
 
     /**
@@ -86,9 +117,7 @@ class A561_Environment_Redaxo5 implements A561_Environment
      */
     public function getPublicPath()
     {
-        $dir = rex_path::addonData('sleightofhand');
-        rex_dir::create($dir);
-        return $this->addon->getAssetsPath();
+        return './out/sleightofhand/';
     }
 
     /**
@@ -109,13 +138,11 @@ class A561_Environment_Redaxo5 implements A561_Environment
      *
      * @return void
      */
-    public function extensionPoint($type,$callback)
+    public function extensionPoint($type, $callback)
     {
-        switch ($type) {
-        case 'ALL_GENERATED':
-            $type = 'CACHE_DELETED';
-            break;
+        if ($type == 'OUTPUT_FILTER') {
+            Sleightofhand_Output_Filter::register($callback);
         }
-        rex_extension::register($type, $callback);
     }
+
 }

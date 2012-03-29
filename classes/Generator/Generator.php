@@ -13,7 +13,7 @@
  */
 
 /**
- * A561_Sleightofhand - Main SOH Graphic Generation Class
+ * Sleightofhand_Sleightofhand - Main SOH Graphic Generation Class
  *
  * @category Sleightofhand
  * @package  Sleightofhand
@@ -22,7 +22,7 @@
  * @version  Release: <package_version>
  * @link     http://bit.ly/sleightofhand-site
  */
-class A561_Sleightofhand
+class Sleightofhand_Generator
 {
     /**
      * Boolean. True if a class instance is valid,
@@ -41,7 +41,7 @@ class A561_Sleightofhand
      */
     public function __construct($settings = array())
     {
-        $this->env = A561::make('Environment');
+        $this->env = Sleightofhand::make('Environment');
 
         $this->settings = $settings;
 
@@ -245,7 +245,7 @@ class A561_Sleightofhand
          */
         $angle = $this->setting('rotateX');
         if ($angle > 0) {
-            $magic = new A561_Magic;
+            $magic = new Sleightofhand_Magic;
             $image = $magic->rotate($image, $angle);
             $bgB = imagecolorat($image, 5, 5);
         }
@@ -324,7 +324,7 @@ class A561_Sleightofhand
             $tmp = $this->settings;
             $tmp['color'] = $this->setting('mouseover');
             unset($tmp['mouseover']);
-            $mouseover = a561_sleightofhand($tmp, true);
+            $mouseover = Sleightofhand($tmp, true);
 
             $sw = imagesx($imageAntialised);
             $sh = imagesy($imageAntialised);

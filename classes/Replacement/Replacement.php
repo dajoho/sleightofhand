@@ -13,7 +13,7 @@
  */
 
 /**
- * A561_Replacements - Container class to store CSS replacement data
+ * Sleightofhand_Replacement - Container class to store CSS replacement data
  *
  * @category Sleightofhand
  * @package  Sleightofhand
@@ -23,7 +23,7 @@
  * @link     http://bit.ly/sleightofhand-site
  */
 
-class A561_Replacements
+class Sleightofhand_Replacement
 {
     static $replacements = array();
 

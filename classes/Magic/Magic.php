@@ -13,7 +13,7 @@
  */
 
 /**
- * A561_Magic - Manages communication with ImageMagick
+ * Sleightofhand_Magic - Manages communication with ImageMagick
  *
  * @category Sleightofhand
  * @package  Sleightofhand
@@ -22,7 +22,7 @@
  * @version  Release: <package_version>
  * @link     http://bit.ly/sleightofhand-site
  */
-class A561_Magic
+class Sleightofhand_Magic
 {
     /**
      * Constructor. Calls functions to find ImageMagick
@@ -33,7 +33,7 @@ class A561_Magic
     public function __construct()
     {
         $this->_locateMagic();
-        $this->generated = A561::env()->getCachePath();
+        $this->generated = Sleightofhand::env()->getCachePath();
     }
 
     /**

@@ -13,8 +13,8 @@
  */
 
 /**
- * A561_Environment_Sally - Contains information about the
- * current SallyCMS installation.
+ * Sleightofhand_Environment_Redaxo4 - Contains information about the
+ * current REDAXO4 installation.
  *
  * @category Sleightofhand
  * @package  Sleightofhand
@@ -24,18 +24,8 @@
  * @link     http://bit.ly/sleightofhand-site
  */
 
-class A561_Environment_Sally implements A561_Environment
+class Sleightofhand_Environment_Redaxo4 implements Sleightofhand_Environment_Abstract
 {
-    /**
-     * Constructor. Saves an instance of the Sleightofhand rex_addon
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->addon = sly_Service_Factory::getService('AddOn');
-    }
-
     /**
      * Detects if the user is logged into the backend
      *
@@ -43,18 +33,29 @@ class A561_Environment_Sally implements A561_Environment
      */
     public function isBackend()
     {
-        return sly_Core::isBackend();
+        global $REX;
+        if ($REX['REDAXO']) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
-     * Detects if the environment is encoded with UTF-8
-     * or Latin. Always false, because Sally uses unicode.
+     * Detects if the environment is encoded with UTF8
+     * or Latin.
      *
      * @return boolean Latin/UTF8
      */
     public function isLatin()
     {
-        return false;
+        global $REX;
+        $pos = strpos($REX['LANG'], '_utf8');
+        if ($pos === false) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -64,7 +65,8 @@ class A561_Environment_Sally implements A561_Environment
      */
     public function getModulePath()
     {
-        return $this->addon->baseFolder('sleightofhand') . '/';
+        global $REX;
+        return $REX['INCLUDE_PATH'] . '/addons/sleightofhand/';
     }
 
     /**
@@ -74,8 +76,8 @@ class A561_Environment_Sally implements A561_Environment
      */
     public function getCachePath()
     {
-        $dir = $this->addon->internalFolder('sleightofhand') . '/';
-        return str_replace(SLY_DATAFOLDER, './data', $dir);
+        global $REX;
+        return $REX['INCLUDE_PATH'] . '/generated/files/';
     }
 
     /**
@@ -85,8 +87,8 @@ class A561_Environment_Sally implements A561_Environment
      */
     public function getPublicPath()
     {
-        $dir = $this->addon->publicFolder('sleightofhand') . '/';
-        return str_replace(SLY_DATAFOLDER, './data', $dir);
+        global $REX;
+        return $REX['HTDOCS_PATH'] . 'files/soh/';
     }
 
     /**
@@ -96,7 +98,7 @@ class A561_Environment_Sally implements A561_Environment
      */
     public function getAssetPath()
     {
-        return $this->getModulePath() . 'data/';
+        return $this->getModulePath().'data/';
     }
 
     /**
@@ -107,11 +109,9 @@ class A561_Environment_Sally implements A561_Environment
      *
      * @return void
      */
-    public function extensionPoint($type,$callback)
+    public function extensionPoint($type, $callback)
     {
-        if ($type != 'ALL_GENERATED') {
-            $dispatcher = sly_Core::dispatcher();
-            $dispatcher->register('OUTPUT_FILTER', $callback);
-        }
+        rex_register_extension($type, $callback);
     }
+
 }

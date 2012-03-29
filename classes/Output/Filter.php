@@ -13,7 +13,7 @@
  */
 
 /**
- * A561_Output_Filter - Generic output filter
+ * Sleightofhand_Output_Filter - Generic output filter
  * for environments without inbuilt output processors.
  *
  * @category Sleightofhand
@@ -24,7 +24,7 @@
  * @link     http://bit.ly/sleightofhand-site
  */
 
-class A561_Output_Filter
+class Sleightofhand_Output_Filter
 {
     /**
      * Registers a new output filter

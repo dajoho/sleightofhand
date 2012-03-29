@@ -1,5 +1,5 @@
-var a561_png = {
-    ns: 'a561_png',
+var Sleightofhand_png = {
+    ns: 'Sleightofhand_png',
     imgSize: {},
     delay: 10,
     nodesFixed: 0,
@@ -43,7 +43,7 @@ var a561_png = {
             return;
         }
         if (event.propertyName.search('background') != -1 || event.propertyName.search('border') != -1) {
-            a561_png.applyVML(el);
+            Sleightofhand_png.applyVML(el);
         }
         if (event.propertyName == 'style.display') {
             display = (el.currentStyle.display == 'none') ? 'none' : 'block';
@@ -54,7 +54,7 @@ var a561_png = {
             }
         }
         if (event.propertyName.search('filter') != -1) {
-            a561_png.vmlOpacity(el);
+            Sleightofhand_png.vmlOpacity(el);
         }
     },
     vmlOpacity: function (el) {
@@ -67,7 +67,7 @@ var a561_png = {
     },
     handlePseudoHover: function (el) {
         setTimeout(function () { /* wouldn't work as intended without setTimeout */
-            a561_png.applyVML(el);
+            Sleightofhand_png.applyVML(el);
         }, 1);
     },
     /**
@@ -79,7 +79,7 @@ var a561_png = {
             var selectors, i;
             selectors = selector.split(','); /* multiple selectors supported, no need for multiple calls to this anymore */
             for (i=0; i<selectors.length; i++) {
-                this.screenStyleSheet.addRule(selectors[i], 'behavior:expression(a561_png.fixPng(this))'); /* seems to execute the function without adding it to the stylesheet - interesting... */
+                this.screenStyleSheet.addRule(selectors[i], 'behavior:expression(Sleightofhand_png.fixPng(this))'); /* seems to execute the function without adding it to the stylesheet - interesting... */
             }
         }
     },
@@ -277,7 +277,7 @@ var a561_png = {
         else if (el.currentStyle.backgroundImage.toLowerCase().search('.png') == -1) {
             return;
         }
-        lib = a561_png;
+        lib = Sleightofhand_png;
         el.vml = {color: {}, image: {}};
         els = {shape: {}, fill: {}};
         for (v in el.vml) {
@@ -306,14 +306,14 @@ var a561_png = {
 try {
     document.execCommand("BackgroundImageCache", false, true); /* TredoSoft Multiple IE doesn't like this, so try{} it */
 } catch(r) {}
-a561_png.createVmlNameSpace();
-a561_png.createVmlStyleSheet();
+Sleightofhand_png.createVmlNameSpace();
+Sleightofhand_png.createVmlStyleSheet();
 
 
 a561(document).ready(function(){
     if (document.attachEvent) {
         
-        a561_png.fix('.soh');
+        Sleightofhand_png.fix('.soh');
         
         a561('.soh-mouseover').each(function(){
             rel = a561(this).attr('rel');

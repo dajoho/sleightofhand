@@ -13,7 +13,7 @@
  */
 
 /**
- * A561 - Generic Bootstrap to get things going
+ * Sleightofhand - Generic Bootstrap to get things going
  *
  * @category Sleightofhand
  * @package  Sleightofhand
@@ -22,8 +22,7 @@
  * @version  Release: <package_version>
  * @link     http://bit.ly/sleightofhand-site
  */
-
-class A561
+class Sleightofhand
 {
     static $env;
 
@@ -38,26 +37,26 @@ class A561
     static public function main($dir='')
     {
         /* classes, functions */
-        include_once $dir . 'classes/class.environment.inc.php';
-        include_once $dir . 'classes/class.environment.redaxo5.inc.php';
-        include_once $dir . 'classes/class.environment.redaxo4.inc.php';
-        include_once $dir . 'classes/class.environment.redaxo3.inc.php';
-        include_once $dir . 'classes/class.environment.sally.inc.php';
-        include_once $dir . 'classes/class.environment.oxid.inc.php';
-        include_once $dir . 'classes/class.output.filter.inc.php';
-        include_once $dir . 'classes/class.sleightofhand.inc.php';
-        include_once $dir . 'classes/class.replacements.inc.php';
-        include_once $dir . 'classes/class.magic.inc.php';
-        include_once $dir . 'functions/function.sleightofhand.inc.php';
+        include_once $dir . 'classes/Environment/Abstract.php';
+        include_once $dir . 'classes/Environment/Redaxo5.php';
+        include_once $dir . 'classes/Environment/Redaxo4.php';
+        include_once $dir . 'classes/Environment/Redaxo3.php';
+        include_once $dir . 'classes/Environment/Sally.php';
+        include_once $dir . 'classes/Environment/Oxid.php';
+        include_once $dir . 'classes/Output/Filter.php';
+        include_once $dir . 'classes/Generator/Generator.php';
+        include_once $dir . 'classes/Replacement/Replacement.php';
+        include_once $dir . 'classes/Magic/Magic.php';
+        include_once $dir . 'functions/Sleightofhand.php';
 
         /* extension points */
-        include_once $dir . 'extensions/extension.scripts.inc.php';
-        include_once $dir . 'extensions/extension.cache.inc.php';
+        include_once $dir . 'extensions/Scripts.php';
+        include_once $dir . 'extensions/Cache.php';
 
         /* include phpquery + replacement EP, if using php5 */
         if (!class_exists('phpQuery')) {
-            include_once $dir . 'classes/class.phpquery.inc.php';
-            include_once $dir . 'extensions/extension.replacements.inc.php';
+            include_once $dir . 'classes/Phpquery/Phpquery.php';
+            include_once $dir . 'extensions/Replacement.php';
         }
 
         /* check if environment can be detected, if not, return. */
@@ -71,19 +70,19 @@ class A561
         $env = self::make('Environment');
 
         /* css, javascripts etc. */
-        if (isset($_REQUEST['a561_css'])) {
+        if (isset($_REQUEST['sleightofhand_css'])) {
             $cssfile = $env->getAssetPath() . 'soh.css';
-            A561::sendFile($cssfile, 'text/css');
+            Sleightofhand::sendFile($cssfile, 'text/css');
             exit();
         }
-        if (isset($_REQUEST['a561_js'])) {
+        if (isset($_REQUEST['sleightofhand_js'])) {
             $jsfile = $env->getAssetPath() . 'soh.js';
-            A561::sendFile($jsfile, 'text/javascript');
+            Sleightofhand::sendFile($jsfile, 'text/javascript');
             exit();
         }
-        if (isset($_REQUEST['a561_js-ie'])) {
+        if (isset($_REQUEST['sleightofhand_js-ie'])) {
             $jsfile = $env->getAssetPath() . 'soh-ie.js';
-            A561::sendFile($jsfile, 'text/javascript');
+            Sleightofhand::sendFile($jsfile, 'text/javascript');
             exit();
         }
     }
@@ -126,7 +125,7 @@ class A561
     static public function make($class='',$params=array())
     {   $object = null;
         if ($class!='') {
-            $class = 'A561_' . $class;
+            $class = 'Sleightofhand_' . $class;
             $specificClass = ucfirst($class) . '_'
                 . ucfirst(self::getEnvironmentSuffix());
             if (class_exists($specificClass)) {
@@ -169,4 +168,9 @@ class A561
         echo file_get_contents($filename);
     }
 }
-A561::main($dir);
+
+class A561 extends Sleightofhand
+{
+}
+
+Sleightofhand::main($dir);

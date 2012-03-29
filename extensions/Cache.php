@@ -20,13 +20,13 @@
  *
  * @return string Unmodified EP Subject
  */
-function A561_clearCache($output)
+function Sleightofhand_clearCache($output)
 {
-    $output = A561_Output_Filter::parse($output);
+    $output = Sleightofhand_Output_Filter::parse($output);
 
-    foreach (glob(A561::env()->getPublicPath() . '*.png') as $file) {
+    foreach (glob(Sleightofhand::env()->getPublicPath() . '*.png') as $file) {
         @unlink($file);
     }
     return $output;
 }
-A561::env()->extensionPoint('ALL_GENERATED', 'A561_clearCache');
+Sleightofhand::env()->extensionPoint('ALL_GENERATED', 'Sleightofhand_clearCache');

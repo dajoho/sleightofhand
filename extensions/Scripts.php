@@ -21,12 +21,12 @@
  * @return string Modified HTML Code
  */
 
-function A561_scripts($output)
+function Sleightofhand_scripts($output)
 {
-    $output = A561_Output_Filter::parse($output);
+    $output = Sleightofhand_Output_Filter::parse($output);
 
     /** @todo Optimize this? Backend elsewhere? */
-    if (!A561::env()->isBackend()) {
+    if (!Sleightofhand::env()->isBackend()) {
         $d = '';
     } else {
         $d = '../';
@@ -34,13 +34,13 @@ function A561_scripts($output)
 
     $buf = '
 <link rel="stylesheet" type="text/css" href="' . $d
-            . 'index.php?a561_css" />
+            . 'index.php?sleightofhand_css" />
 <script type="text/javascript" src="' . $d
-            . 'index.php?a561_js"></script>
+            . 'index.php?sleightofhand_js"></script>
 <!--[if lt IE 7]><script type="text/javascript" src="' . $d
-            . 'index.php?a561_js-ie"></script><![endif]-->
+            . 'index.php?sleightofhand_js-ie"></script><![endif]-->
 ';
     $output = str_replace('</head>', $buf . '</head>', $output);
     return $output;
 }
-A561::env()->extensionPoint('OUTPUT_FILTER', 'A561_scripts');
+Sleightofhand::env()->extensionPoint('OUTPUT_FILTER', 'Sleightofhand_scripts');
