@@ -169,6 +169,17 @@ class Sleightofhand
     }
 }
 
+/**
+ * A561 - Wrapper for Sleightofhand Class
+ *
+ * @category   Sleightofhand
+ * @package    Sleightofhand
+ * @author     Dave Holloway <dh@dajoho.de>
+ * @license    MIT License http://www.opensource.org/licenses/mit-license.html
+ * @version    Release: <package_version>
+ * @link       http://bit.ly/sleightofhand-site
+ * @deprecated Here for compatibility reasons only. Please use Sleightofhand.
+ */
 class A561 extends Sleightofhand
 {
 }

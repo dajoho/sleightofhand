@@ -20,7 +20,7 @@
  *
  * @return string
  */
-function Sleightofhand($settings=array(), $fn=false)
+function sleightofhand($settings=array(), $fn=false)
 {
     $obj = new Sleightofhand_Generator($settings);
     if ($obj->valid) {
@@ -35,11 +35,19 @@ function Sleightofhand($settings=array(), $fn=false)
 }
 
 /**
+ * Wraps Sleightofhand() for compatibility
+ *
+ * @param array   $settings Array of settings
+ * @param boolean $fn       Return Image Link or Code
+ *
+ * @return string
+ *
  * @deprecated
  * @todo compat
  * */
-function A561_Sleightofhand($settings = array(),$fn=false) {
-    return Sleightofhand($settings,$fn);
+function A561_sleightofhand($settings = array(),$fn=false)
+{
+    return Sleightofhand($settings, $fn);
 }
 
 /**
@@ -58,8 +66,13 @@ function Sleightofhand_addReplacement($selector='',$settings=array())
 }
 
 /**
- * @todo compat
+ * Wraps Sleightofhand_addReplacement (also deprecated)
+ *
+ * @param string $selector CSS Selector
+ * @param string $settings Array of Sleightofhand settings
+ *
  * @deprecated
+ * @return void
  */
 function A561_addReplacement($selector='',$settings=array())
 {
@@ -112,7 +125,16 @@ function Sleightofhand_replace($selector='',$output='',$settings=array())
     return $output;
 }
 
-
+/**
+ * Wraps Sleightofhand_replace
+ *
+ * @param string $selector CSS Selector
+ * @param string $output   HTML Source
+ * @param array  $settings Array of Sleightofhand Settings
+ *
+ * @deprecated
+ * @return string Modified HTML Code
+ */
 function A561_replace($selector='',$output='',$settings=array())
 {
     return Sleightofhand_replace($selector, $output, $settings);
