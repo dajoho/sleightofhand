@@ -37,7 +37,6 @@ class A561
      */
     static public function main($dir='')
     {
-
         /* classes, functions */
         include_once $dir . 'classes/class.environment.inc.php';
         include_once $dir . 'classes/class.environment.redaxo5.inc.php';
