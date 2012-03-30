@@ -12,13 +12,13 @@
 
 	<target name="phpcs" description="Generate checkstyle.xml using PHP_CodeSniffer">
 		<exec executable="phpcs">
-			<arg line="--report=checkstyle --report-file=${basedir}/build/logs/checkstyle.xml --standard=build/phpcs.xml --ignore='${basedir}/classes/phpQuery/*,${basedir}/classes/class.phpquery.inc.php' ${source}/" />
+			<arg line="--report=checkstyle --report-file=${basedir}/build/logs/checkstyle.xml --standard=build/phpcs.xml --ignore='${basedir}/classes/*Phpquery*' ${source}/" />
 		</exec>
 	</target>
 
 	<target name="phpdoc" description="Generate API documentation">
 		<exec executable="phpdoc">
-			<arg line="-d ${source} -t ${basedir}/build/docs  --ignore='${basedir}/classes/phpQuery/*,${basedir}/classes/class.phpquery.inc.php' --title='Sleightofhand' " />
+			<arg line="-d ${source} -t ${basedir}/build/docs  --ignore='${basedir}/classes/*Phpquery*' --title='Sleightofhand' " />
 		</exec>
 	</target>
 
