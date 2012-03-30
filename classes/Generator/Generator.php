@@ -30,7 +30,14 @@ class Sleightofhand_Generator
      *
      * @var unknown_type
      */
-    var $valid = false;
+    public $valid = false;
+
+    /**
+     * Array of settings, $k=>$v;
+     *
+     * @var array Sleightofhand settings array
+     */
+    protected $settings = array();
 
     /**
      * Main/Init SOH Function
@@ -43,7 +50,7 @@ class Sleightofhand_Generator
     {
         $this->env = Sleightofhand::make('Environment');
 
-        $this->settings = $settings;
+        $this->_settings = $settings;
 
         $this->setting(
             'fontpath',
@@ -94,7 +101,7 @@ class Sleightofhand_Generator
 
             $this->valid = true;
 
-            $cachekey = md5(serialize($this->settings));
+            $cachekey = md5(serialize($this->_settings));
             $cachepath = $this->env->getPublicPath();
 
             if (!file_exists($cachepath)) {
@@ -321,7 +328,7 @@ class Sleightofhand_Generator
 
         /* Combine mouseover with main image */
         if ($this->setting('mouseover') != "") {
-            $tmp = $this->settings;
+            $tmp = $this->_settings;
             $tmp['color'] = $this->setting('mouseover');
             unset($tmp['mouseover']);
             $mouseover = Sleightofhand($tmp, true);
@@ -541,14 +548,14 @@ class Sleightofhand_Generator
     {
         if ($key != null && $value == null) {
             /* getter */
-            if (isset($this->settings[$key])) {
-                return $this->settings[$key];
+            if (isset($this->_settings[$key])) {
+                return $this->_settings[$key];
             } else {
                 return '';
             }
         } else if ($key != null && $value != null) {
             /* setter */
-            $this->settings[$key] = $value;
+            $this->_settings[$key] = $value;
             return true;
         }
 
