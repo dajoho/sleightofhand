@@ -53,4 +53,6 @@ function Sleightofhand_replacement($output)
 
     return $output;
 }
-Sleightofhand::env()->extensionPoint('OUTPUT_FILTER', 'Sleightofhand_replacement');
+Sleightofhand::env()->extensionPoint(
+    'OUTPUT_FILTER', 'Sleightofhand_replacement'
+);
