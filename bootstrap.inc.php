@@ -43,6 +43,7 @@ class Sleightofhand
         include_once $dir . 'classes/Environment/Redaxo3.php';
         include_once $dir . 'classes/Environment/Sally.php';
         include_once $dir . 'classes/Environment/Oxid.php';
+        include_once $dir . 'classes/Environment/Wordpress.php';
         include_once $dir . 'classes/Output/Filter.php';
         include_once $dir . 'classes/Generator/Generator.php';
         include_once $dir . 'classes/Replacement/Replacement.php';
