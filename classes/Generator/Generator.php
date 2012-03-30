@@ -37,7 +37,7 @@ class Sleightofhand_Generator
      *
      * @var array Sleightofhand settings array
      */
-    protected $settings = array();
+    protected $_settings = array();
 
     /**
      * Main/Init SOH Function

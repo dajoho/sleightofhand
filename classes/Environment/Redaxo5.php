@@ -24,7 +24,8 @@
  * @link     http://bit.ly/sleightofhand-site
  */
 
-class Sleightofhand_Environment_Redaxo5 implements Sleightofhand_Environment_Abstract
+class Sleightofhand_Environment_Redaxo5
+implements Sleightofhand_Environment_Abstract
 {
     /**
      * Constructor. Saves an instance of the Sleightofhand rex_addon

@@ -24,7 +24,8 @@
  * @link     http://bit.ly/sleightofhand-site
  */
 
-class Sleightofhand_Environment_Redaxo3 extends Sleightofhand_Environment_Redaxo4
+class Sleightofhand_Environment_Redaxo3
+extends Sleightofhand_Environment_Redaxo4
 {
     /**
      * Registers an extension point

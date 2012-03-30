@@ -24,7 +24,8 @@
  * @link     http://bit.ly/sleightofhand-site
  */
 
-class Sleightofhand_Environment_Redaxo4 implements Sleightofhand_Environment_Abstract
+class Sleightofhand_Environment_Redaxo4
+implements Sleightofhand_Environment_Abstract
 {
     /**
      * Detects if the user is logged into the backend

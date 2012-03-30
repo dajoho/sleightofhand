@@ -23,7 +23,8 @@
  * @version  Release: <package_version>
  * @link     http://bit.ly/sleightofhand-site
  */
-class Sleightofhand_Environment_Oxid implements Sleightofhand_Environment_Abstract
+class Sleightofhand_Environment_Oxid
+implements Sleightofhand_Environment_Abstract
 {
     /**
      * Starts consistency checks

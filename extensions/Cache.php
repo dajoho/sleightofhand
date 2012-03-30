@@ -29,4 +29,6 @@ function Sleightofhand_clearCache($output)
     }
     return $output;
 }
-Sleightofhand::env()->extensionPoint('ALL_GENERATED', 'Sleightofhand_clearCache');
+Sleightofhand::env()->extensionPoint(
+    'ALL_GENERATED', 'Sleightofhand_clearCache'
+);
