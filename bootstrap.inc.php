@@ -46,6 +46,7 @@ class Sleightofhand
         include_once $dir . 'classes/Environment/Wordpress.php';
         include_once $dir . 'classes/Output/Filter.php';
         include_once $dir . 'classes/Generator/Generator.php';
+        include_once $dir . 'classes/Preloader/Preloader.php';
         include_once $dir . 'classes/Replacement/Replacement.php';
         include_once $dir . 'classes/Magic/Magic.php';
         include_once $dir . 'functions/Sleightofhand.php';
@@ -53,6 +54,7 @@ class Sleightofhand
         /* extension points */
         include_once $dir . 'extensions/Scripts.php';
         include_once $dir . 'extensions/Cache.php';
+        include_once $dir . 'extensions/Preloader.php';
 
         /* include phpquery + replacement EP, if using php5 */
         if (!class_exists('phpQuery')) {

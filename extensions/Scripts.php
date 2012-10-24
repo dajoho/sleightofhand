@@ -27,7 +27,7 @@ function Sleightofhand_scripts($output)
 
     /** @todo Optimize this? Backend elsewhere? */
     if (!Sleightofhand::env()->isBackend()) {
-        $d = '';
+        $d = '/';
     } else {
         $d = '../';
     }

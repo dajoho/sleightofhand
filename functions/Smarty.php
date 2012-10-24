@@ -45,6 +45,7 @@ function Smarty_Function_sleightofhand($params, &$smarty)
         }
         $settings['text'] = $text;
         $text = Sleightofhand($settings);
+        Sleightofhand_Preloader::addPreloader($text);
     }
     return $text;
 }
