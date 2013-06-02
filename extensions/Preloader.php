@@ -36,6 +36,8 @@ function Sleightofhand_preloader($output)
 
     return $output;
 }
+/*
 Sleightofhand::env()->extensionPoint(
     'OUTPUT_FILTER', 'Sleightofhand_preloader'
 );
+*/
