@@ -118,7 +118,15 @@ implements Sleightofhand_Environment_Abstract
      */
     public function getPublicPath()
     {
-        return './out/sleightofhand/';
+        $conf = oxconfig::getInstance();
+        $baspath = $conf->getShopUrl();
+        return $baspath.'/out/sleightofhand/';
+    }
+
+    public function getPublicPathLocal()
+    {
+        $baspath = $_SERVER['DOCUMENT_ROOT'].'/'.ltrim(dirname($_SERVER['SCRIPT_NAME']), '/');
+        return $baspath.'/out/sleightofhand/';
     }
 
     /**
@@ -145,5 +153,4 @@ implements Sleightofhand_Environment_Abstract
             Sleightofhand_Output_Filter::register($callback);
         }
     }
-
 }

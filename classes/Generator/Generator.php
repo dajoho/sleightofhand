@@ -40,6 +40,13 @@ class Sleightofhand_Generator
     protected $_settings = array();
 
     /**
+     * Array containing the used preset
+     *
+     * @var array Preset values array
+     */
+    protected $_preset = array();
+
+    /**
      * Main/Init SOH Function
      * Checks settings, caching and generally
      * gets things going.
@@ -57,6 +64,11 @@ class Sleightofhand_Generator
             $this->env->getModulePath() . 'fonts/'
         );
 
+        /* Initiate variable for preset if a preset name is submitted */
+        if($this->setting('preset') != '' and array_key_exists($this->setting('preset'), Sleightofhand_presets::$default_presets)){
+            $this->_preset = Sleightofhand_presets::$default_presets[$this->setting('preset')];
+        }
+
         $font = $this->setting('font');
         $fontpath = $this->setting('fontpath');
         $size = $this->setting('size');
@@ -64,6 +76,7 @@ class Sleightofhand_Generator
         $wrap = $this->setting('wordwrap');
         $quality = $this->setting('quality');
         $align = $this->setting('text-align');
+
 
         $quality = intVal($quality);
         if ($quality == 0) {
@@ -98,11 +111,10 @@ class Sleightofhand_Generator
         if (!empty($font) && !empty($size) && !empty($color)
             && file_exists($fontpath . $font)
         ) {
-
             $this->valid = true;
 
             $cachekey = md5(serialize($this->_settings));
-            $cachepath = $this->env->getPublicPath();
+            $cachepath = $this->env->getPublicPathLocal();
 
             if (!file_exists($cachepath)) {
                 $result = @mkdir($cachepath);
@@ -118,7 +130,7 @@ class Sleightofhand_Generator
             /*
              * Force compiling for development
              */
-            //$this->generate();
+            $this->generate();
         }
     }
 
@@ -133,6 +145,7 @@ class Sleightofhand_Generator
          * This isn't really needed, and should be commented out while testing.
          * It is only here for poorly configured servers.
          */
+
         @ini_set('max_execution_time', 300);
         @ini_set('memory_limit', '256M');
 
@@ -548,9 +561,17 @@ class Sleightofhand_Generator
     {
         if ($key != null && $value == null) {
             /* getter */
-            if (isset($this->_settings[$key])) {
+
+            /* Use preset if requested and key exists in preset */
+            if (count($this->_preset) != 0 and array_key_exists($key, $this->_preset)) {
+                if(isset($this->_settings[$key])){
+                    return $this->_settings[$key];
+                } else {
+                    return $this->_preset[$key];
+                }
+            } elseif(isset($this->_settings[$key])){
                 return $this->_settings[$key];
-            } else {
+            }else {
                 return '';
             }
         } else if ($key != null && $value != null) {

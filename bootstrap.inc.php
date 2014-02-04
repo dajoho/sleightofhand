@@ -36,6 +36,11 @@ class Sleightofhand
      */
     static public function main($dir='')
     {
+        /* Presets */
+        include_once $dir . 'classes/Presets/Presets.class.php';
+        include_once $dir . 'Presets.php';
+
+
         /* classes, functions */
         include_once $dir . 'classes/Environment/Abstract.php';
         include_once $dir . 'classes/Environment/Redaxo5.php';
